@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * Displays the list of Members for a Committee
+ *
+ * Available variables
+ * - committee: JSON object from OnBoard containing committee information
+ *
+ * @copyright 2017 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
+ */
+#}
+<section class="committeeMembers">
+    <header>
+        <h1>Members</h1>
+    </header>
+    <div>
+    {% for seat in committee.seats %}
+        {% if seat.currentMember %}
+            <dl><dt>{{ seat.currentMember.name }}</dt>
+                {% if seat.appointedBy %}
+                <dd>Appointed By: {{ seat.appointedBy }}</dd>
+                {% endif %}
+
+                {% if seat.termEndDate %}
+                <dd>Term Expires: {{ seat.termEndDate }}</dd>
+                {% else %}
+                <dd>Member Since: {{ seat.termStartDate }}</dd>
+                {% endif %}
+            </dl>
+        {% endif %}
+    {% endfor %}
+    </div>
+    {% if committee.info.vacancy %}
+    <div>
+        <a href="/onboard/applicants/apply?committee_id={{ committee.info.id }}">
+            Apply to fill a vacancy on this board
+        </a>
+    </div>
+    {% endif %}
+</section>

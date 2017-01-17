@@ -1,0 +1,5 @@
+{
+    "name": "City-of-Bloomington/drupal-module-onboard",
+    "type": "drupal-module",
+    "description": "Integration with the OnBoard web application"
+}
