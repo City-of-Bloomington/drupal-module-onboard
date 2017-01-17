@@ -5,14 +5,19 @@
  */
 namespace Drupal\onboard\Plugin\Block;
 
+use Drupal\onboard\OnBoardService;
+
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
  * @Block(
- *  id = "members_block",
- *  admin_label = "Committee Members"
+ *     id = "members_block",
+ *     admin_label = "Committee Members",
+ *     context = {
+ *         "node" = @ContextDefinition("entity:node")
+ *     }
  * )
  */
 class MembersBlock extends BlockBase implements BlockPluginInterface
@@ -22,42 +27,17 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
      */
     public function build()
     {
-        $config = $this->getConfiguration();
-        if (!empty($config['committee_id'])) {
-            $json = OnBoardService::committee_info($config['committee_id']);
+        $node = $this->getContextValue('node');
+        if ($node->hasField( 'field_committee')) {
+            $id = $node->get('field_committee')->value;
+            if ($id) {
+                $json = OnBoardService::committee_info($id);
 
-            return [
-                '#theme'     => 'onboard_members',
-                '#committee' => $json
-            ];
+                return [
+                    '#theme'     => 'onboard_members',
+                    '#committee' => $json
+                ];
+            }
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function blockForm($form, FormStateInterface $form_state)
-    {
-        $form   = parent::blockForm($form, $form_state);
-        $config = $this->getConfiguration();
-
-        $form['members_block_committee_id'] = [
-            '#type'          => 'number',
-            '#title'         => 'Committee ID',
-            '#description'   => 'The Committee ID in OnBoard',
-            '#min'           => 1,
-            '#step'          => 1,
-            '#size'          => 5,
-            '#default_value' => isset($config['committee_id']) ? $config['committee_id'] : ''
-        ];
-        return $form;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function blockSubmit($form, FormStateInterface $form_state)
-    {
-        $this->setConfigurationValue('committee_id', $form_state->getValue('members_block_committee_id'));
     }
 }

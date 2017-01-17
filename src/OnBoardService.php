@@ -5,6 +5,8 @@
  */
 namespace Drupal\onboard;
 
+use Drupal\Core\Site\Settings;
+
 class OnBoardService
 {
     /**

@@ -22,10 +22,10 @@
                 <dd>Appointed By: {{ seat.appointedBy }}</dd>
                 {% endif %}
 
-                {% if seat.termEndDate %}
-                <dd>Term Expires: {{ seat.termEndDate }}</dd>
+                {% if seat.currentMember.termEndDate %}
+                <dd>Term Expires: {{ seat.currentMember.termEndDate }}</dd>
                 {% else %}
-                <dd>Member Since: {{ seat.termStartDate }}</dd>
+                <dd>Member Since: {{ seat.currentMember.termStartDate }}</dd>
                 {% endif %}
             </dl>
         {% endif %}
