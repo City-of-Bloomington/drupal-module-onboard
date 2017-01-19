@@ -27,9 +27,15 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
      */
     public function build()
     {
-        $node = $this->getContextValue('node');
-        if ($node->hasField( 'field_committee')) {
-            $id = $node->get('field_committee')->value;
+        $config = $this->getConfiguration();
+        $node   = $this->getContextValue('node');
+
+        $fieldname = !empty($config['fieldname'])
+                          ? $config['fieldname']
+                          : 'field_committee';
+
+        if ($node->hasField( $fieldname)) {
+            $id = $node->get($fieldname)->value;
             if ($id) {
                 $json = OnBoardService::committee_info($id);
 
@@ -39,5 +45,30 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
                 ];
             }
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function blockForm($form, FormStateInterface $form_state)
+    {
+        $form   = parent::blockForm($form, $form_state);
+        $config = $this->getConfiguration();
+
+        $form['members_block_fieldname'] = [
+            '#type' => 'textfield',
+            '#title' => 'Fieldname',
+            '#description' => 'Name of the node field that contains the committee_id',
+            '#default_value' => isset($config['fieldname']) ? $config['fieldname'] : ''
+        ];
+        return $form;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function blockSubmit($form, FormStateInterface $form_state)
+    {
+        $this->configuration['fieldname'] = $form_state->getValue('members_block_fieldname');
     }
 }
