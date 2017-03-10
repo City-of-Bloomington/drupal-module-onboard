@@ -25,10 +25,10 @@ function onboard_help($route_name, RouteMatchInterface $route_match)
 function onboard_theme()
 {
     return [
-        'onboard_documents'=> [
-            'template' => 'onboard_documents',
+        'onboard_meetingFiles'=> [
+            'template' => 'onboard_meetingFiles',
             'variables' => [
-                'documents'=>null, 'types'=>null, 'year'=>null, 'years'=>null, 'namespace'=>null
+                'meetings'=>null, 'year'=>null, 'years'=>null, 'node'=>null
             ]
         ],
         'onboard_members' => [
@@ -36,7 +36,7 @@ function onboard_theme()
             'variables' => [
                 'committee' => null
             ]
-        ]
+        ],
     ];
 }
 

@@ -1,0 +1,42 @@
+{#
+/**
+ * @file
+ * Displays the list of Meetings and Meetings Documents
+ *
+ * Available variables
+ * - meetings: The meetings JSON data from OnBoard
+ * - year:     The year for the meetings being listed
+ * - years:    The available years of meetingFiles we have for the committee
+ * - node:     The node object for the board page in Drupal
+ *
+ * @copyright 2017 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
+ */
+#}
+<section>
+    <header>
+        <h1>{{ year }} Meetings</h1>
+    </header>
+    <nav>
+    {% for y in years %}
+        <a href="#">{{ y }}</a>
+    {% endfor %}
+    </nav>
+
+    <div>
+        <dl>
+        {% for date, meeting in meetings %}
+            <dt>{{ date }}</dt>
+            {% for type, files in meeting.files %}
+            <dd class="{{ type }}">
+                <dl><dt>{{ type }}</dt>
+                    {% for file in files %}
+                    <dd>{{ file.filename }}</dd>
+                    {% endfor %}
+                </dl>
+            </dd>
+            {% endfor %}
+        {% endfor %}
+        </dl>
+    </div>
+</section>

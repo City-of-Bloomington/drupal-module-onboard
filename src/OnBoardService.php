@@ -19,7 +19,7 @@ class OnBoardService
 
         $client = \Drupal::httpClient();
         $response = $client->get($url);
-        return json_decode($response->getBody());
+        return json_decode($response->getBody(), true);
     }
     /**
      * @param  int      $committee_id
@@ -32,6 +32,26 @@ class OnBoardService
 
         $client = \Drupal::httpClient();
         $response = $client->get($url);
-        return json_decode($response->getBody());
+        return json_decode($response->getBody(), true);
+    }
+
+    public static function meetings($committee_id, $year)
+    {
+        $ONBOARD = Settings::get('onboard_url');
+        $url = $ONBOARD."/committees/meetings?format=json;committee_id=$committee_id?year=$year";
+
+        $client = \Drupal::httpClient();
+        $response = $client->get($url);
+        return json_decode($response->getBody(), true);
+    }
+
+    public static function meetingFile_years($committee_id)
+    {
+        $ONBOARD = Settings::get('onboard_url');
+        $url = $ONBOARD."/meetingFiles/years?format=json;committee_id=$committee_id";
+
+        $client = \Drupal::httpClient();
+        $response = $client->get($url);
+        return json_decode($response->getBody(), true);
     }
 }

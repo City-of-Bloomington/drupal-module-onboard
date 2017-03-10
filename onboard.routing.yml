@@ -1,0 +1,11 @@
+onboard.meetings:
+  path: '/onboard/{node}'
+  defaults:
+    _controller: '\Drupal\onboard\Controller\OnBoardController::meetings'
+    _title: 'Meetings'
+  requirements:
+    _permission: 'access content'
+  options:
+    parameters:
+      node:
+        type: entity:node
