@@ -10,32 +10,32 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
 #}
-<section class="committeeMembers">
-    <header>
-        <h1>Members</h1>
-    </header>
+<div>
+{% for seat in committee.seats %}
+    {% if seat.currentMember %}
     <div>
-    {% for seat in committee.seats %}
-        {% if seat.currentMember %}
-            <dl><dt>{{ seat.currentMember.name }}</dt>
-                {% if seat.appointedBy %}
-                <dd>Appointed By: {{ seat.appointedBy }}</dd>
-                {% endif %}
+        <h3>{{ seat.currentMember.name }}</h3>
+        <dl>{% if seat.appointedBy %}
+            <dt>Appointed By:</dt>
+            <dd>{{ seat.appointedBy }}</dd>
+            {% endif %}
 
-                {% if seat.currentMember.termEndDate %}
-                <dd>Term Expires: {{ seat.currentMember.termEndDate }}</dd>
-                {% else %}
-                <dd>Member Since: {{ seat.currentMember.termStartDate }}</dd>
-                {% endif %}
-            </dl>
-        {% endif %}
-    {% endfor %}
-    </div>
-    {% if committee.info.vacancy %}
-    <div>
-        <a href="/onboard/applicants/apply?committee_id={{ committee.info.id }}">
-            Apply to fill a vacancy on this board
-        </a>
+            {% if seat.currentMember.termEndDate %}
+            <dt>Term Expires:</dt>
+            <dd>{{ seat.currentMember.termEndDate }}</dd>
+            {% else %}
+            <dt>Member Since:</dt>
+            <dd>{{ seat.currentMember.termStartDate }}</dd>
+            {% endif %}
+        </dl>
     </div>
     {% endif %}
-</section>
+{% endfor %}
+</div>
+{% if committee.info.vacancy %}
+<div>
+    <a href="/onboard/applicants/apply?committee_id={{ committee.info.id }}">
+        Apply to fill a vacancy on this board
+    </a>
+</div>
+{% endif %}
