@@ -35,7 +35,7 @@ class SettingsForm extends ConfigFormBase
 
         $form['onboard_url'] = [
             '#type'          => 'textfield',
-            '#title'         => 'CKAN Url',
+            '#title'         => 'OnBoard Url',
             '#default_value' => $config->get('onboard_url')
         ];
 
