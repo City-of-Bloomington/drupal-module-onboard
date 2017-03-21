@@ -9,49 +9,46 @@ use Drupal\Core\Site\Settings;
 
 class OnBoardService
 {
+    private static function getUrl()
+    {
+        $config  = \Drupal::config('onboard.settings');
+        return $config->get('onboard_url');
+    }
+
+    private static function doJsonQuery($url)
+    {
+        $client   = \Drupal::httpClient();
+        $response = $client->get($url);
+        return json_decode($response->getBody(), true);
+    }
     /**
      * @return stdClass The JSON object
      */
     public static function committee_list()
     {
-        $ONBOARD = Settings::get('onboard_url');
-        $url = $ONBOARD.'/committees?format=json';
-
-        $client = \Drupal::httpClient();
-        $response = $client->get($url);
-        return json_decode($response->getBody(), true);
+        $url = self::getUrl().'/committees?format=json';
+        return self::doJsonQuery($url);
     }
+
     /**
      * @param  int      $committee_id
      * @return stdClass               The json object
      */
     public static function committee_info($committee_id)
     {
-        $ONBOARD = Settings::get('onboard_url');
-        $url = $ONBOARD.'/committees/members?format=json;committee_id='.$committee_id;
-
-        $client = \Drupal::httpClient();
-        $response = $client->get($url);
-        return json_decode($response->getBody(), true);
+        $url = self::getUrl().'/committees/members?format=json;committee_id='.$committee_id;
+        return self::doJsonQuery($url);
     }
 
     public static function meetings($committee_id, $year)
     {
-        $ONBOARD = Settings::get('onboard_url');
-        $url = $ONBOARD."/committees/meetings?format=json;committee_id=$committee_id?year=$year";
-
-        $client = \Drupal::httpClient();
-        $response = $client->get($url);
-        return json_decode($response->getBody(), true);
+        $url = self::getUrl()."/committees/meetings?format=json;committee_id=$committee_id?year=$year";
+        return self::doJsonQuery($url);
     }
 
     public static function meetingFile_years($committee_id)
     {
-        $ONBOARD = Settings::get('onboard_url');
-        $url = $ONBOARD."/meetingFiles/years?format=json;committee_id=$committee_id";
-
-        $client = \Drupal::httpClient();
-        $response = $client->get($url);
-        return json_decode($response->getBody(), true);
+        $url = self::getUrl()."/meetingFiles/years?format=json;committee_id=$committee_id";
+        return self::doJsonQuery($url);
     }
 }

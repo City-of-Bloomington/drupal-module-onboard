@@ -1,3 +1,11 @@
+---
+onboard.settings:
+  path: '/admin/config/onboard/settings'
+  defaults:
+    _form: '\Drupal\onboard\Form\SettingsForm'
+    _title: 'OnBoard Settings'
+  requirements:
+    _permission: 'administer site configuration'
 onboard.meetings:
   path: '/onboard/{node}'
   defaults:
@@ -9,3 +17,4 @@ onboard.meetings:
     parameters:
       node:
         type: entity:node
+...

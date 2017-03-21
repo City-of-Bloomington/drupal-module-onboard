@@ -1,5 +1,8 @@
+---
 name: OnBoard
 description: Integration with external boards and commissions data
 package: COB
 type: module
 core: 8.x
+configure: onboard.settings
+...
