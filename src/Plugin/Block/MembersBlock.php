@@ -12,12 +12,14 @@ use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * Displays members for a committee from OnBoard.
+ *
  * @Block(
- *     id = "members_block",
- *     admin_label = "Committee Members",
- *     context = {
- *         "node" = @ContextDefinition("entity:node")
- *     }
+ *   id = "onboard_members_block",
+ *   admin_label = "Committee Members",
+ *   context = {
+ *     "node" = @ContextDefinition("entity:node")
+ *   }
  * )
  */
 class MembersBlock extends BlockBase implements BlockPluginInterface
@@ -55,10 +57,10 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
         $form   = parent::blockForm($form, $form_state);
         $config = $this->getConfiguration();
 
-        $form['members_block_fieldname'] = [
-            '#type' => 'textfield',
-            '#title' => 'Fieldname',
-            '#description' => 'Name of the node field that contains the committee_id',
+        $form['onboard_committee_field'] = [
+            '#type'          => 'textfield',
+            '#title'         => 'Fieldname',
+            '#description'   => 'Name of the field that contains the committee_id',
             '#default_value' => isset($config['fieldname']) ? $config['fieldname'] : ''
         ];
         return $form;
@@ -69,6 +71,6 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
      */
     public function blockSubmit($form, FormStateInterface $form_state)
     {
-        $this->configuration['fieldname'] = $form_state->getValue('members_block_fieldname');
+        $this->configuration['fieldname'] = $form_state->getValue('onboard_committee_field');
     }
 }
