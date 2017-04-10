@@ -9,7 +9,7 @@ use Drupal\Core\Site\Settings;
 
 class OnBoardService
 {
-    private static function getUrl()
+    public static function getUrl()
     {
         $config  = \Drupal::config('onboard.settings');
         return $config->get('onboard_url');
