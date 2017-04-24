@@ -34,7 +34,9 @@ function onboard_theme()
         'onboard_members' => [
             'template' => 'onboard_members',
             'variables' => [
-                'committee' => null
+                'committee'   => null,
+                'nid'         => null,
+                'onboard_url' => null
             ]
         ],
     ];

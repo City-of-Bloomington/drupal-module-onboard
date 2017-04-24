@@ -42,8 +42,10 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
                 $json = OnBoardService::committee_info($id);
 
                 return [
-                    '#theme'     => 'onboard_members',
-                    '#committee' => $json
+                    '#theme'       => 'onboard_members',
+                    '#committee'   => $json,
+                    '#nid'         => $node->id(),
+                    '#onboard_url' => OnBoardService::getUrl()
                 ];
             }
         }
