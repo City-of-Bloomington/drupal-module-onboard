@@ -10,12 +10,11 @@ use Drupal\onboard\OnBoardService;
 
 class OnBoardController extends ControllerBase
 {
-    public function meetings($node)
+    public function meetings($node, $year)
     {
         if ($node->hasField('field_committee') && $node->field_committee->value) {
-            $year = !empty($_GET['year'])
-                  ?  (int) $_GET['year']
-                  :  (int) date('Y');
+            $year = (int)$year;
+            if (!$year) { $year = (int)date('Y');  }
 
             $committee_id = $node->field_committee->value;
 

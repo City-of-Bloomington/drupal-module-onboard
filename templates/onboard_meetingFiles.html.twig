@@ -15,28 +15,30 @@
 #}
 <section>
     <header>
-        <h1>{{ year }} Meetings</h1>
+        <h2>{{ year }} Meetings</h2>
+        <div class="tools">
+            <a href="{{ path('onboard.meetings', {'node':node.id, 'year':year - 1}) }}">Back</a>
+            <a href="{{ path('onboard.meetings', {'node':node.id, 'year':year + 1}) }}">Next</a>
+        </div>
     </header>
     <nav>
     {% for y in years %}
-        <a href="#">{{ y }}</a>
+        <a href="{{ path('onboard.meetings', {'node':node.id, 'year':y}) }}">{{ y }}</a>
     {% endfor %}
     </nav>
 
-    <div>
-        <dl>
-        {% for date, meeting in meetings %}
-            <dt>{{ date }}</dt>
-            {% for type, files in meeting.files %}
-            <dd class="{{ type }}">
-                <dl><dt>{{ type }}</dt>
-                    {% for file in files %}
-                    <dd>{{ file.filename }}</dd>
-                    {% endfor %}
-                </dl>
-            </dd>
-            {% endfor %}
+    {% for date, meeting in meetings %}
+    <div class="meeting">
+        <h3>{{ date }}</h3>
+        {% for type, files in meeting.files %}
+        <div class="{{ type }}">
+            <h4>{{ type }}</h4>
+                {% for file in files %}
+                <a href="{{ file.url }}">{{ file.filename }}</a>
+                {% endfor %}
+            </dl>
+        </div>
         {% endfor %}
-        </dl>
     </div>
+    {% endfor %}
 </section>

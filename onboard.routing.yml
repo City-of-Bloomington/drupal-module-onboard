@@ -7,10 +7,11 @@ onboard.settings:
   requirements:
     _permission: 'administer site configuration'
 onboard.meetings:
-  path: '/onboard/{node}'
+  path: '/onboard/{node}/{year}'
   defaults:
     _controller: '\Drupal\onboard\Controller\OnBoardController::meetings'
     _title: 'Meetings'
+    year: 0
   requirements:
     _permission: 'access content'
   options:
