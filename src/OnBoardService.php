@@ -42,7 +42,7 @@ class OnBoardService
 
     public static function meetings($committee_id, $year)
     {
-        $url = self::getUrl()."/committees/meetings?format=json;committee_id=$committee_id?year=$year";
+        $url = self::getUrl()."/committees/meetings?format=json;committee_id=$committee_id;year=$year";
         return self::doJsonQuery($url);
     }
 
