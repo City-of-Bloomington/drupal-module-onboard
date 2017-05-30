@@ -40,6 +40,14 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
             $id = $node->get($fieldname)->value;
             if ($id) {
                 $json = OnBoardService::committee_info($id);
+                if (!empty($json['seats'])) {
+                     usort($json['seats'], function ($a, $b) {
+                        $as = $a['vacant'] ? 'Vacant' : $a['currentMember']['lastname'];
+                        $bs = $b['vacant'] ? 'Vacant' : $b['currentMember']['lastname'];
+                        if     ($as == $bs) { return 0; }
+                        return ($as <  $bs) ? -1 : 1;
+                     });
+                }
 
                 return [
                     '#theme'       => 'onboard_members',
