@@ -42,6 +42,24 @@ class Routes
                         ]
                     ]
                 );
+                $routes["onboard.legislation.node-$nid"] = new Route(
+                    "$alias/legislation/{year}",
+                    [
+                        '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislation',
+                        '_title'      => 'Legislation',
+                        'node'        => $nid,
+                        'year'        => 0
+                    ],
+                    [
+                        '_permission' => 'access content',
+                        'year'        => '\d+'
+                    ],
+                    [
+                        'parameters' => [
+                            'node' => ['type'=>'entity:node']
+                        ]
+                    ]
+                );
             }
         }
         return $routes;

@@ -31,4 +31,26 @@ class OnBoardController extends ControllerBase
         }
         return [];
     }
+
+    public function legislation($node, $year)
+    {
+        if ($node->hasField('field_committee') && $node->field_committee->value) {
+            $year = (int)$year;
+            if (!$year) { $year = (int)date('Y');  }
+
+            $committee_id = $node->field_committee->value;
+
+            $legislation = OnBoardService::legislation($committee_id, $year);
+            $years       = OnBoardService::legislation_years($committee_id);
+
+            return [
+                '#theme'       => 'onboard_legislation',
+                '#legislation' => $legislation,
+                '#year'        => $year,
+                '#years'       => $years,
+                '#node'        => $node
+            ];
+        }
+        return [];
+    }
 }

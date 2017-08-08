@@ -51,4 +51,16 @@ class OnBoardService
         $url = self::getUrl()."/meetingFiles/years?format=json;committee_id=$committee_id";
         return self::doJsonQuery($url);
     }
+
+    public static function legislation($committee_id, $year)
+    {
+        $url = self::getUrl()."/legislation?format=json;committee_id=$committee_id;year=$year";
+        return self::doJsonQuery($url);
+    }
+
+    public static function legislation_years($committee_id)
+    {
+        $url = self::getUrl()."/legislation/years?format=json;committee_id=$committee_id";
+        return self::doJsonQuery($url);
+    }
 }
