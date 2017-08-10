@@ -40,9 +40,22 @@ class OnBoardService
         return self::doJsonQuery($url);
     }
 
-    public static function meetings($committee_id, $year)
+    public static function meetings($committee_id, $year=null, \DateTime $start=null, \DateTime $end=null)
     {
-        $url = self::getUrl()."/committees/meetings?format=json;committee_id=$committee_id;year=$year";
+        $params = ['committee_id'=>$committee_id, 'format'=>'json'];
+        if ($start) {
+            if (!$end) {
+                $end = clone $start;
+                $end->add(new \DateInterval('P1Y'));
+            }
+            $params['start'] = $start->format('Y-m-d');
+            $params['end'  ] = $end  ->format('Y-m-d');
+        }
+        else {
+            $params['year'] = $year;
+        }
+
+        $url = self::getUrl().'/committees/meetings?'.http_build_query($params);
         return self::doJsonQuery($url);
     }
 

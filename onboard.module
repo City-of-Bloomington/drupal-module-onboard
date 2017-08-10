@@ -25,6 +25,15 @@ function onboard_help($route_name, RouteMatchInterface $route_match)
 function onboard_theme()
 {
     return [
+        'onboard_upcoming_meetings' => [
+            'template' => 'onboard_upcoming_meetings',
+            'variables' => [
+                'meetings'  => null,
+                'committee' => null,
+                'nid'       => null
+
+            ]
+        ],
         'onboard_meetingFiles'=> [
             'template' => 'onboard_meetingFiles',
             'variables' => [
