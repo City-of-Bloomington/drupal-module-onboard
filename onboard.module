@@ -48,12 +48,22 @@ function onboard_theme()
                 'onboard_url' => null
             ]
         ],
-        'onboard_legislation'=> [
+        'onboard_legislation' => [
             'template' => 'onboard_legislation',
             'variables' => [
-                'legislation'=>null, 'year'=>null, 'years'=>null, 'node'=>null
+                'legislation' => null,
+                'year'        => null,
+                'years'       => null,
+                'node'        => null
             ]
         ],
+        'onboard_legislationYears' => [
+            'template' => 'onboard_legislationYears',
+            'variables' => [
+                'decades' => null,
+                'node'    => null
+            ]
+        ]
     ];
 }
 

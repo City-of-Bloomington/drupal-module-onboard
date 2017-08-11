@@ -6,36 +6,39 @@
  * Available variables
  * - legislation: The legislation JSON data from OnBoard
  * - year:        The year for the meetings being listed
- * - years:       The available years of meetingFiles we have for the committee
+ * - years:       Available years to choose from
  * - node:        The node object for the board page in Drupal
  *
  * @copyright 2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
-#}
+blo#}
 <section>
     <header>
-        <h2>{{ year }} Legislation</h2>
+        <h2>{{ year }}</h2>
         <div class="tools">
             {% set route = 'onboard.legislation.node-' ~ node.id %}
-            <a href="{{ path(route, {'node':node.id, 'year':year - 1}) }}">Back</a>
-            <a href="{{ path(route, {'node':node.id, 'year':year + 1}) }}">Next</a>
+            {% for y in years %}
+            <a href="{{ path(route, {'node':node.id, 'year':y}) }}"{% if y == year %} class="current"{% endif %}>
+                {{ y }}
+            </a>
+            {% endfor %}
+
+            {% set route = 'onboard.legislation.years.node-' ~ node.id %}
+            <a href="{{ path(route, {'node':node.id}) }}">Archive</a>
         </div>
     </header>
-    <nav>
-    {% for y in years %}
-        <a href="{{ path(route, {'node':node.id, 'year':y}) }}">{{ y }}</a>
-    {% endfor %}
-    </nav>
 
+    <table>
     {% for l in legislation %}
-    <div class="legislation {{ l.type }}">
-        <h3>{{ l.type }} {{ l.number }}</h3>
-        <h4>{{ l.title }}</h4>
-        <p>{{ l.synopsis }}</p>
-        {% for file in files %}
-        <a href="{{ file.url }}">Download</a>
-        {% endfor %}
-    </div>
+    <tr><td>{{ l.type }}</td>
+        <td>{{ l.number }}</td>
+        <td>{% for file in l.files %}
+            <a href="{{ file.url }}">Download</a>
+            {% endfor %}
+        </td>
+        <td>{{ l.title }}</td>
+    </tr>
     {% endfor %}
+    </table>
 </section>

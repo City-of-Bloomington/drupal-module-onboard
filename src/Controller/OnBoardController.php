@@ -5,8 +5,10 @@
  */
 namespace Drupal\onboard\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
 use Drupal\onboard\OnBoardService;
+
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Form\FormState;
 
 class OnBoardController extends ControllerBase
 {
@@ -35,22 +37,58 @@ class OnBoardController extends ControllerBase
     public function legislation($node, $year)
     {
         if ($node->hasField('field_committee') && $node->field_committee->value) {
-            $year = (int)$year;
-            if (!$year) { $year = (int)date('Y');  }
+            $year = $year ? (int)$year : (int)date('Y');
 
             $committee_id = $node->field_committee->value;
 
             $legislation = OnBoardService::legislation($committee_id, $year);
             $years       = OnBoardService::legislation_years($committee_id);
 
+            $maxItems    = 10;
+            $half        = (int)$maxItems/2;
+            $currentYear = (int)date('Y');
+
+            $maxYear = ($year + $half < $currentYear) ? $year + $half : $currentYear;
+
+            $options = [];
+            $c = 0;
+            foreach ($years as $y) {
+                if ($y <= $maxYear) {
+                    if ($c >= $maxItems) { break; }
+
+                    $options["$y"] = $y;
+                    $c++;
+                }
+            }
+
             return [
                 '#theme'       => 'onboard_legislation',
                 '#legislation' => $legislation,
                 '#year'        => $year,
-                '#years'       => $years,
+                '#years'       => $options,
                 '#node'        => $node
             ];
         }
         return [];
+    }
+
+    public function legislationYears($node)
+    {
+        if ($node->hasField('field_committee') && $node->field_committee->value) {
+            $committee_id = $node->field_committee->value;
+            $years        = OnBoardService::legislation_years($committee_id);
+
+            $decades = [];
+            foreach ($years as $y) {
+                $d = (floor($y / 10)) * 10;
+                $decades[$d][] = $y;
+            }
+
+            return [
+                '#theme'   => 'onboard_legislationYears',
+                '#decades' => $decades,
+                '#node'    => $node
+            ];
+        }
     }
 }

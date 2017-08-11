@@ -5,7 +5,8 @@
  *
  * Available variables
  * - meetings:   Hash of meetings, indexed by date
- * - nid:         The current node ID
+ * - nid:        The current node ID
+ * - committee:  JSON object from OnBoard containing committee information
  *
  * @see https://developers.google.com/google-apps/calendar/v3/reference/events
  * @copyright 2017 City of Bloomington, Indiana
@@ -37,5 +38,8 @@
     <a href="https://calendar.google.com/calendar/embed?src={{ calendarId }}&ctz=America/New_York" class="button">Calendar</a>
     {% if committee.info.videoArchive %}
     <a href="{{ committee.info.videoArchive }}" class="button">Videos</a>
+    {% endif %}
+    {% if committee.info.legislative %}
+    <a href="{{ path('onboard.legislation.node-'~nid, {'node': nid}) }}" class="button">Legislation</a>
     {% endif %}
 </div>

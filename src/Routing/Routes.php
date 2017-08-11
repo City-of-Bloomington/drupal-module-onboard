@@ -60,6 +60,22 @@ class Routes
                         ]
                     ]
                 );
+                $routes["onboard.legislation.years.node-$nid"] = new Route(
+                    "$alias/legislation/archive",
+                    [
+                        '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislationYears',
+                        '_title'      => 'Archive',
+                        'node'        => $nid
+                    ],
+                    [
+                        '_permission' => 'access content'
+                    ],
+                    [
+                        'parameters' => [
+                            'node' => ['type'=>'entity:node']
+                        ]
+                    ]
+                );
             }
         }
         return $routes;

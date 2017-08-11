@@ -1,0 +1,27 @@
+{#
+/**
+ * @file
+ * Displays available years to let the user choose a year
+ *
+ * Available variables
+ * - decades:  The available years of legislation, organized by decade
+ * - node:     The node object for the board page in Drupal
+ *
+ * @copyright 2017 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
+ */
+#}
+<section>
+    <header>
+        <h2>Archive</h2>
+    </header>
+    {% set route = 'onboard.legislation.node-' ~ node.id %}
+    {% for d, years in decades %}
+        <h3>{{ d }}'s</h3>
+        <ul>
+        {% for y in years %}
+        <li><a href="{{ path(route, {'node':node.id, 'year':y}) }}">{{ y }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+</section>

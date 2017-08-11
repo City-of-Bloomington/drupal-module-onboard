@@ -15,30 +15,24 @@
 #}
 <section>
     <header>
-        <h2>{{ year }} Meetings</h2>
-        <div class="tools">
+        <h2>
             {% set route = 'onboard.meetings.node-' ~ node.id %}
-            <a href="{{ path(route, {'node':node.id, 'year':year - 1}) }}">Back</a>
-            <a href="{{ path(route, {'node':node.id, 'year':year + 1}) }}">Next</a>
-        </div>
+            <a href="{{ path(route, {'node':node.id, 'year':year - 1}) }}" class="back button">Back</a>
+            {{ year }}
+            <a href="{{ path(route, {'node':node.id, 'year':year + 1}) }}" class="next button">Next</a>
+        </h2>
     </header>
-    <nav>
-    {% for y in years %}
-        <a href="{{ path(route, {'node':node.id, 'year':y}) }}">{{ y }}</a>
-    {% endfor %}
-    </nav>
 
+    <table>
     {% for date, meeting in meetings %}
-    <div class="meeting">
-        <h3>{{ date }}</h3>
-        {% for type, files in meeting.files %}
-        <div class="{{ type }}">
-            <h4>{{ type }}</h4>
-            {% for file in files %}
-            <a href="{{ file.url }}">{{ file.title ?: file.filename }}</a>
+    <tr><td>{% for type, files in meeting.files %}
+                {% for file in files %}
+                <a href="{{ file.url }}">{{ file.title ?: file.filename }}</a>
+                {% endfor %}
             {% endfor %}
-        </div>
-        {% endfor %}
-    </div>
+        </td>
+        <td>{{ date }}</td>
+    </tr>
     {% endfor %}
+    </table>
 </section>
