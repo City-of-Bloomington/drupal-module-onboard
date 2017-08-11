@@ -19,8 +19,8 @@
     {% for d, years in decades %}
         <h3>{{ d }}'s</h3>
         <ul>
-        {% for y in years %}
-        <li><a href="{{ path(route, {'node':node.id, 'year':y}) }}">{{ y }}</a></li>
+        {% for y, count in years %}
+        <li><a href="{{ path(route, {'node':node.id, 'year':y}) }}">{{ y }} ({{ count }})</a></li>
         {% endfor %}
         </ul>
     {% endfor %}

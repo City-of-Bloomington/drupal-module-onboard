@@ -52,7 +52,7 @@ class OnBoardController extends ControllerBase
 
             $options = [];
             $c = 0;
-            foreach ($years as $y) {
+            foreach (array_keys($years) as $y) {
                 if ($y <= $maxYear) {
                     if ($c >= $maxItems) { break; }
 
@@ -79,9 +79,9 @@ class OnBoardController extends ControllerBase
             $years        = OnBoardService::legislation_years($committee_id);
 
             $decades = [];
-            foreach ($years as $y) {
+            foreach ($years as $y=>$data) {
                 $d = (floor($y / 10)) * 10;
-                $decades[$d][] = $y;
+                $decades[$d][$y] = $data;
             }
 
             return [
