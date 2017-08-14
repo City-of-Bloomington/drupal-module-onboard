@@ -85,7 +85,7 @@ class OnBoardController extends ControllerBase
             }
 
             return [
-                '#theme'   => 'onboard_legislationYears',
+                '#theme'   => 'onboard_archiveYears',
                 '#decades' => $decades,
                 '#node'    => $node,
                 '#route'   => 'onboard.legislation.node-'.$node->get('nid')->value
@@ -106,7 +106,7 @@ class OnBoardController extends ControllerBase
             }
 
             return [
-                '#theme'   => 'onboard_legislationYears',
+                '#theme'   => 'onboard_archiveYears',
                 '#decades' => $decades,
                 '#node'    => $node,
                 '#route'   => 'onboard.meetings.node-'.$node->get('nid')->value
