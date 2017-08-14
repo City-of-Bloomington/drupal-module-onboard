@@ -6,6 +6,7 @@
  * Available variables
  * - decades:  The available years of legislation, organized by decade
  * - node:     The node object for the board page in Drupal
+ * - route:    Route to use as link for years listing
  *
  * @copyright 2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
@@ -15,7 +16,6 @@
     <header>
         <h2>Archive</h2>
     </header>
-    {% set route = 'onboard.legislation.node-' ~ node.id %}
     {% for d, years in decades %}
         <h3>{{ d }}'s</h3>
         <ul>

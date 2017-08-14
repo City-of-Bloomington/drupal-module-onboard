@@ -87,7 +87,29 @@ class OnBoardController extends ControllerBase
             return [
                 '#theme'   => 'onboard_legislationYears',
                 '#decades' => $decades,
-                '#node'    => $node
+                '#node'    => $node,
+                '#route'   => 'onboard.legislation.node-'.$node->get('nid')->value
+            ];
+        }
+    }
+
+    public function meetingYears($node)
+    {
+        if ($node->hasField('field_committee') && $node->field_committee->value) {
+            $committee_id = $node->field_committee->value;
+            $years        = OnBoardService::meetingFile_years($committee_id);
+
+            $decades = [];
+            foreach ($years as $y=>$data) {
+                $d = (floor($y / 10)) * 10;
+                $decades[$d][$y] = $data;
+            }
+
+            return [
+                '#theme'   => 'onboard_legislationYears',
+                '#decades' => $decades,
+                '#node'    => $node,
+                '#route'   => 'onboard.meetings.node-'.$node->get('nid')->value
             ];
         }
     }

@@ -15,23 +15,31 @@
 #}
 <section>
     <header>
-        <h2>
+        <h2>{{ year }}</h2>
+        <div>
             {% set route = 'onboard.meetings.node-' ~ node.id %}
-            <a href="{{ path(route, {'node':node.id, 'year':year - 1}) }}" class="back button">Back</a>
-            {{ year }}
-            <a href="{{ path(route, {'node':node.id, 'year':year + 1}) }}" class="next button">Next</a>
+            {% for y, count in years %}
+            <a href="{{ path(route, {'node':node.id, 'year':y}) }}"{% if y == year %} class="current"{% endif %}>
+                {{ y }}
+            </a>
+            {% endfor %}
+
+            {% set route = 'onboard.meetings.years.node-' ~ node.id %}
+            <a href="{{ path(route, {'node':node.id}) }}">Archive</a>
         </h2>
     </header>
 
     <table>
     {% for date, meeting in meetings %}
-    <tr><td>{% for type, files in meeting.files %}
-                {% for file in files %}
-                <a href="{{ file.url }}">{{ file.title ?: file.filename }}</a>
+    <tr><th>{{ date }}</th>
+        <td>{% for type, files in meeting.files %}
+                {% for c, file in files %}
+                <a href="{{ file.url }}">
+                    {{ type }}{% if c %} ({{ c }}){% endif %},
+                </a>
                 {% endfor %}
             {% endfor %}
         </td>
-        <td>{{ date }}</td>
     </tr>
     {% endfor %}
     </table>
