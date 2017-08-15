@@ -12,7 +12,7 @@
  * @copyright 2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
-blo#}
+#}
 <section>
     <header>
         <h2>{{ year }}</h2>
@@ -31,13 +31,15 @@ blo#}
 
     <table>
     {% for l in legislation %}
-    <tr><td>{{ l.type }}</td>
-        <td>{{ l.number }}</td>
+    {% set route = 'onboard.' ~ l.type ~ '.node-' ~ node.id %}
+    {% set url   = path(route, {'node':node.id, 'number':l.number}) %}
+    <tr><td><a href="{{ url }}">{{ l.type }}</a></td>
+        <td><a href="{{ url }}">{{ l.number }}</a></td>
         <td>{% for file in l.files %}
             <a href="{{ file.url }}">Download</a>
             {% endfor %}
         </td>
-        <td>{{ l.title }}</td>
+        <td><a href="{{ url }}">{{ l.title }}</a></td>
     </tr>
     {% endfor %}
     </table>

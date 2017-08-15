@@ -32,6 +32,7 @@
     <table>
     {% for date, meeting in meetings %}
     <tr><th>{{ date }}</th>
+        <td>{{ meeting.summary }}</td>
         <td>{% for type, files in meeting.files %}
                 {% for c, file in files %}
                 <a href="{{ file.url }}">

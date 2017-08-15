@@ -65,15 +65,35 @@ class OnBoardService
         return self::doJsonQuery($url);
     }
 
-    public static function legislation($committee_id, $year)
+    public static function legislation_find(array $fields)
+    {
+        $fields['format'] = 'json';
+        $params = http_build_query($fields);
+        $url = self::getUrl()."/legislation?$params";
+        return self::doJsonQuery($url);
+    }
+
+    public static function legislation_list($committee_id, $year)
     {
         $url = self::getUrl()."/legislation?format=json;committee_id=$committee_id;year=$year";
+        return self::doJsonQuery($url);
+    }
+
+    public static function legislation_info($legislation_id)
+    {
+        $url = self::getUrl()."/legislation/view?format=json;legislation_id=$legislation_id";
         return self::doJsonQuery($url);
     }
 
     public static function legislation_years($committee_id)
     {
         $url = self::getUrl()."/legislation/years?format=json;committee_id=$committee_id";
+        return self::doJsonQuery($url);
+    }
+
+    public static function legislation_types()
+    {
+        $url = self::getUrl()."/legislationTypes?format=json";
         return self::doJsonQuery($url);
     }
 }

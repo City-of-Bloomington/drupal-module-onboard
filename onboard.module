@@ -57,6 +57,13 @@ function onboard_theme()
                 'node'        => null
             ]
         ],
+        'onboard_legislationInfo' => [
+            'template' => 'onboard_legislationInfo',
+            'variables' => [
+                'legislation' => null,
+                'node'        => null
+            ]
+        ],
         'onboard_archiveYears' => [
             'template' => 'onboard_archiveYears',
             'variables' => [
@@ -66,19 +73,4 @@ function onboard_theme()
             ]
         ]
     ];
-}
-
-/**
- * @implements template_preprocess_HOOK()
- * @see https://api.drupal.org/api/drupal/core!lib!Drupal!Core!Render!theme.api.php/group/themeable/8.2.x
- */
-function template_preprocess_onboard_members(&$vars)
-{
-    if (!empty(  $vars['committee']->seats)) {
-        #foreach ($vars['committee']->seats as $i=>$seat) {
-        #    if (!empty($seat->currentMember->name)) {
-        #
-        #    }
-        #}
-    }
 }
