@@ -26,6 +26,12 @@ class SettingsForm extends ConfigFormBase
             '#default_value' => $config->get('onboard_url')
         ];
 
+        $form['onboard_committee_field'] = [
+            '#type'          => 'textfield',
+            '#title'         => 'Committee ID Field',
+            '#default_value' => $config->get('onboard_committee_field')
+        ];
+
         $options = [];
         $checked = $config->get('onboard_types');
         $types   = \Drupal::entityTypeManager()->getStorage('node_type')->loadMultiple();
@@ -54,8 +60,9 @@ class SettingsForm extends ConfigFormBase
         }
 
         $this->config('onboard.settings')
-             ->set('onboard_url',   $form_state->getValue('onboard_url'))
-             ->set('onboard_types', $types)
+             ->set('onboard_url',             $form_state->getValue('onboard_url'))
+             ->set('onboard_committee_field', $form_state->getValue('onboard_committee_field'))
+             ->set('onboard_types',           $types)
              ->save();
 
         parent::submitForm($form, $form_state);

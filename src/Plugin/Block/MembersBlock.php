@@ -29,12 +29,10 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
      */
     public function build()
     {
-        $config = $this->getConfiguration();
-        $node   = $this->getContextValue('node');
+        $settings  = \Drupal::config('onboard.settings');
+        $fieldname = $settings->get('onboard_committee_field');
+        $node      = $this->getContextValue('node');
 
-        $fieldname = !empty($config['fieldname'])
-                          ? $config['fieldname']
-                          : 'field_committee';
 
         if ($node->hasField( $fieldname)) {
             $id = $node->get($fieldname)->value;
@@ -57,30 +55,5 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
                 ];
             }
         }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function blockForm($form, FormStateInterface $form_state)
-    {
-        $form   = parent::blockForm($form, $form_state);
-        $config = $this->getConfiguration();
-
-        $form['onboard_committee_field'] = [
-            '#type'          => 'textfield',
-            '#title'         => 'Fieldname',
-            '#description'   => 'Name of the field that contains the committee_id',
-            '#default_value' => isset($config['fieldname']) ? $config['fieldname'] : ''
-        ];
-        return $form;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function blockSubmit($form, FormStateInterface $form_state)
-    {
-        $this->configuration['fieldname'] = $form_state->getValue('onboard_committee_field');
     }
 }

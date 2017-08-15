@@ -12,13 +12,26 @@ use Drupal\Core\Form\FormState;
 
 class OnBoardController extends ControllerBase
 {
+    private $fieldname = '';
+
+    public function getCommitteeIdField()
+    {
+        if (!$this->fieldname) {
+            $config  = \Drupal::config('onboard.settings');
+            $this->fieldname = $config->get('onboard_committee_field');
+        }
+        return $this->fieldname;
+    }
+
     public function meetings($node, $year)
     {
-        if ($node->hasField('field_committee') && $node->field_committee->value) {
+        $field = $this->getCommitteeIdField();
+
+        if ($node->hasField($field) && $node->$field->value) {
             $year = (int)$year;
             if (!$year) { $year = (int)date('Y');  }
 
-            $committee_id = $node->field_committee->value;
+            $committee_id = $node->$field->value;
 
             $meetings = OnBoardService::meetings($committee_id, $year);
             $years    = OnBoardService::meetingFile_years($committee_id);
@@ -36,12 +49,14 @@ class OnBoardController extends ControllerBase
 
     public function legislation($node, $year)
     {
-        if ($node->hasField('field_committee') && $node->field_committee->value) {
+        $field = $this->getCommitteeIdField();
+
+        if ($node->hasField($field) && $node->$field->value) {
             $year = $year ? (int)$year : (int)date('Y');
 
-            $committee_id = $node->field_committee->value;
+            $committee_id = $node->$field->value;
 
-            $legislation = OnBoardService::legislation($committee_id, $year);
+            $legislation = OnBoardService::legislation_list ($committee_id, $year);
             $years       = OnBoardService::legislation_years($committee_id);
 
             $maxItems    = 10;
@@ -74,8 +89,10 @@ class OnBoardController extends ControllerBase
 
     public function legislationYears($node)
     {
-        if ($node->hasField('field_committee') && $node->field_committee->value) {
-            $committee_id = $node->field_committee->value;
+        $field = $this->getCommitteeIdField();
+
+        if ($node->hasField($field) && $node->$field->value) {
+            $committee_id = $node->$field->value;
             $years        = OnBoardService::legislation_years($committee_id);
 
             $decades = [];
@@ -93,10 +110,23 @@ class OnBoardController extends ControllerBase
         }
     }
 
+    public function legislationInfo($node, $legislation_id)
+    {
+        $legislation = OnBoardService::legislation_info($legislation_id);
+
+        return [
+            '#theme'       => 'onboard_legislationInfo',
+            '#legislation' => $legislation,
+            '#node'        => $node
+        ];
+    }
+
     public function meetingYears($node)
     {
-        if ($node->hasField('field_committee') && $node->field_committee->value) {
-            $committee_id = $node->field_committee->value;
+        $field = $this->getCommitteeIdField();
+
+        if ($node->hasField($field) && $node->$field->value) {
+            $committee_id = $node->$field->value;
             $years        = OnBoardService::meetingFile_years($committee_id);
 
             $decades = [];
@@ -112,5 +142,26 @@ class OnBoardController extends ControllerBase
                 '#route'   => 'onboard.meetings.node-'.$node->get('nid')->value
             ];
         }
+    }
+
+    public function legislationView($node, $type, $number)
+    {
+        $field = $this->getCommitteeIdField();
+
+        $fields = [
+            'committee_id' => $node->$field->value,
+            'type'         => $type,
+            'number'       => $number
+        ];
+        $list = OnBoardService::legislation_find($fields);
+        if (count($list) === 1) {
+            return [
+                '#theme'       => 'onboard_legislationInfo',
+                '#legislation' => $list[0],
+                '#node'        => $node
+
+            ];
+        }
+        return [];
     }
 }

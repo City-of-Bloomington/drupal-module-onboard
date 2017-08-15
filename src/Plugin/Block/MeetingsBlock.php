@@ -25,16 +25,16 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class MeetingsBlock extends BlockBase implements BlockPluginInterface
 {
-    const DEFAULT_FIELDNAME = 'field_committee';
     const DEFAULT_NUMDAYS   = 7;
     const DEFAULT_MAXEVENTS = 4;
 
     public function build()
     {
-        $config = $this->getConfiguration();
-        $node   = $this->getContextValue('node');
+        $settings  = \Drupal::config('onboard.settings');
+        $fieldname = $settings->get('onboard_committee_field');
+        $config    = $this->getConfiguration();
+        $node      = $this->getContextValue('node');
 
-        $fieldname = !empty($config['fieldname']) ?      $config['fieldname'] : self::DEFAULT_FIELDNAME;
         $numdays   = !empty($config['numdays'  ]) ? (int)$config['numdays'  ] : self::DEFAULT_NUMDAYS;
         $maxevents = !empty($config['maxevents']) ? (int)$config['maxevents'] : self::DEFAULT_MAXEVENTS;
 
@@ -45,7 +45,13 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
                 $end   = new \DateTime();
                 $end->add(new \DateInterval("P{$numdays}D"));
 
-                $meetings  = OnBoardService::meetings($id,  null, $start, $end);
+                $c        = 0;
+                $meetings = [];
+                foreach (OnBoardService::meetings($id,  null, $start, $end) as $m) {
+                    $c++;
+                    if ($c > $maxevents) { break; }
+                    $meetings[] = $m;
+                }
                 $committee = OnBoardService::committee_info($id);
                 return [
                     '#theme'     => 'onboard_upcoming_meetings',
@@ -62,12 +68,6 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
         $form   = parent::blockForm($form, $form_state);
         $config = $this->getConfiguration();
 
-        $form['onboard_meetings_field'] = [
-            '#type'          => 'textfield',
-            '#title'         => 'Fieldname',
-            '#description'   => 'Name of the field that contains the committee_id',
-            '#default_value' => isset($config['fieldname']) ? $config['fieldname'] : ''
-        ];
         $form['onboard_meetings_numdays'] = [
             '#type'          => 'number',
             '#title'         => 'Number of days',
@@ -85,7 +85,6 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
 
     public function blockSubmit($form, FormStateInterface $form_state)
     {
-        $this->configuration['fieldname'] = $form_state->getValue('onboard_meetings_field'    );
         $this->configuration['numdays'  ] = $form_state->getValue('onboard_meetings_numdays'  );
         $this->configuration['maxevents'] = $form_state->getValue('onboard_meetings_maxevents');
    }
