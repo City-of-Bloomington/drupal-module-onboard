@@ -72,13 +72,22 @@ class Routes
 
 
                 if (in_array((int)$committee_id, self::$legislative)) {
-                    $routes["onboard.legislation.node-$nid"] = new Route(
-                        "$alias/legislation/{year}",
+                    $routes["onboard.legislationTypes.node-$nid"] = new Route(
+                        "$alias/legislation",
                         [
-                            '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislation',
+                            '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislationTypes',
                             '_title'      => 'Legislation',
                             'node'        => $nid,
-                            'year'        => 0
+                        ],
+                        ['_permission' => 'access content'],
+                        ['parameters'  => ['node' => ['type'=>'entity:node']]]
+                    );
+                    $routes["onboard.legislationList.node-$nid"] = new Route(
+                        "$alias/legislation/{type}/{year}",
+                        [
+                            '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislationList',
+                            '_title'      => 'Legislation',
+                            'node'        => $nid,
                         ],
                         [
                             '_permission' => 'access content',
@@ -86,8 +95,8 @@ class Routes
                         ],
                         ['parameters' => ['node' => ['type'=>'entity:node']]]
                     );
-                    $routes["onboard.legislation.years.node-$nid"] = new Route(
-                        "$alias/legislation/archive",
+                    $routes["onboard.legislationYears.node-$nid"] = new Route(
+                        "$alias/legislation/{type}",
                         [
                             '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislationYears',
                             '_title'      => 'Archive',
@@ -96,22 +105,16 @@ class Routes
                         ['_permission' => 'access content'],
                         ['parameters'  => ['node' => ['type'=>'entity:node']]]
                     );
-                    foreach ($legislationTypes as $t) {
-                        if (!$t['subtype']) {
-                            $routes["onboard.$t[name].node-$nid"] = new Route(
-                                "$alias/$t[name]/{number}",
-                                [
-                                    '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislationView',
-                                    '_title'      => "$t[name] $t[number]",
-                                    'type'        => $t['name'],
-                                    'number'      => '',
-                                    'node'        => $nid
-                                ],
-                                ['_permission' => 'access content'],
-                                ['parameters'  => ['node' => ['type'=>'entity:node']]]
-                            );
-                        }
-                    }
+                    $routes["onboard.legislationInfo.node-$nid"] = new Route(
+                        "$alias/legislation/{type}/{year}/{number}",
+                        [
+                            '_controller' => '\Drupal\onboard\Controller\OnBoardController::legislationInfo',
+                            '_title'      => 'Archive',
+                            'node'        => $nid
+                        ],
+                        ['_permission' => 'access content'],
+                        ['parameters'  => ['node' => ['type'=>'entity:node']]]
+                    );
                 }
             }
         }

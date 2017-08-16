@@ -40,6 +40,13 @@ function onboard_theme()
                 'meetings'=>null, 'year'=>null, 'years'=>null, 'node'=>null
             ]
         ],
+        'onboard_meetingYears' => [
+            'template' => 'onboard_meetingYears',
+            'variables' => [
+                'decades' => null,
+                'node'    => null
+            ]
+        ],
         'onboard_members' => [
             'template' => 'onboard_members',
             'variables' => [
@@ -48,10 +55,18 @@ function onboard_theme()
                 'onboard_url' => null
             ]
         ],
-        'onboard_legislation' => [
-            'template' => 'onboard_legislation',
+        'onboard_legislationTypes' => [
+            'template' => 'onboard_legislationTypes',
+            'variables' => [
+                'types' => null,
+                'node'  => null
+            ]
+        ],
+        'onboard_legislationList' => [
+            'template' => 'onboard_legislationList',
             'variables' => [
                 'legislation' => null,
+                'type'        => null,
                 'year'        => null,
                 'years'       => null,
                 'node'        => null
@@ -64,12 +79,12 @@ function onboard_theme()
                 'node'        => null
             ]
         ],
-        'onboard_archiveYears' => [
-            'template' => 'onboard_archiveYears',
+        'onboard_legislationYears' => [
+            'template' => 'onboard_legislationYears',
             'variables' => [
                 'decades' => null,
                 'node'    => null,
-                'route'   => null
+                'type'    => null
             ]
         ]
     ];

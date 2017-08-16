@@ -47,7 +47,25 @@ class OnBoardController extends ControllerBase
         return [];
     }
 
-    public function legislation($node, $year)
+    public function legislationTypes($node)
+    {
+        $field = $this->getCommitteeIdField();
+        if ($node->hasField($field) && $node->$field->value) {
+            $committee_id = $node->$field->value;
+
+            $types = [];
+            foreach (OnBoardService::legislation_types() as $t) {
+                if (!$t['subtype']) { $types[] = $t['name']; }
+            }
+            return [
+                '#theme' => 'onboard_legislationTypes',
+                '#types' => $types,
+                '#node'  => $node
+            ];
+        }
+    }
+
+    public function legislationList($node, $type, $year)
     {
         $field = $this->getCommitteeIdField();
 
@@ -56,8 +74,12 @@ class OnBoardController extends ControllerBase
 
             $committee_id = $node->$field->value;
 
-            $legislation = OnBoardService::legislation_list ($committee_id, $year);
-            $years       = OnBoardService::legislation_years($committee_id);
+            $years       = OnBoardService::legislation_years($committee_id, $type);
+            $legislation = OnBoardService::legislation_list([
+                'committee_id' => $committee_id,
+                'type'         => $type,
+                'year'         => $year
+            ]);
 
             $maxItems    = 10;
             $half        = (int)$maxItems/2;
@@ -77,8 +99,9 @@ class OnBoardController extends ControllerBase
             }
 
             return [
-                '#theme'       => 'onboard_legislation',
+                '#theme'       => 'onboard_legislationList',
                 '#legislation' => $legislation,
+                '#type'        => $type,
                 '#year'        => $year,
                 '#years'       => $options,
                 '#node'        => $node
@@ -87,13 +110,13 @@ class OnBoardController extends ControllerBase
         return [];
     }
 
-    public function legislationYears($node)
+    public function legislationYears($node, $type)
     {
         $field = $this->getCommitteeIdField();
 
         if ($node->hasField($field) && $node->$field->value) {
             $committee_id = $node->$field->value;
-            $years        = OnBoardService::legislation_years($committee_id);
+            $years        = OnBoardService::legislation_years($committee_id, $type);
 
             $decades = [];
             foreach ($years as $y=>$data) {
@@ -102,23 +125,37 @@ class OnBoardController extends ControllerBase
             }
 
             return [
-                '#theme'   => 'onboard_archiveYears',
+                '#theme'   => 'onboard_legislationYears',
                 '#decades' => $decades,
                 '#node'    => $node,
-                '#route'   => 'onboard.legislation.node-'.$node->get('nid')->value
+                '#type'    => $type,
+                '#route'   => 'onboard.legislationList.node-'.$node->get('nid')->value
             ];
         }
     }
 
-    public function legislationInfo($node, $legislation_id)
+    public function legislationInfo($node, $type, $year, $number)
     {
-        $legislation = OnBoardService::legislation_info($legislation_id);
+        $field = $this->getCommitteeIdField();
 
-        return [
-            '#theme'       => 'onboard_legislationInfo',
-            '#legislation' => $legislation,
-            '#node'        => $node
-        ];
+        if ($node->hasField($field) && $node->$field->value) {
+            $committee_id = $node->$field->value;
+
+            $list = OnBoardService::legislation_list([
+                'committee_id' => $committee_id,
+                'type'         => $type,
+                'year'         => $year,
+                'number'       => $number
+            ]);
+            if (count($list) == 1) {
+                return [
+                    '#theme'       => 'onboard_legislationInfo',
+                    '#title'       => $number,
+                    '#legislation' => $list[0],
+                    '#node'        => $node
+                ];
+            }
+        }
     }
 
     public function meetingYears($node)
@@ -136,7 +173,7 @@ class OnBoardController extends ControllerBase
             }
 
             return [
-                '#theme'   => 'onboard_archiveYears',
+                '#theme'   => 'onboard_meetingYears',
                 '#decades' => $decades,
                 '#node'    => $node,
                 '#route'   => 'onboard.meetings.node-'.$node->get('nid')->value

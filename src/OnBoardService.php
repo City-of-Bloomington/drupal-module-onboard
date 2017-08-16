@@ -3,6 +3,7 @@
  * @copyright 2017 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
+declare (strict_types=1);
 namespace Drupal\onboard;
 
 use Drupal\Core\Site\Settings;
@@ -19,7 +20,7 @@ class OnBoardService
     {
         $client   = \Drupal::httpClient();
         $response = $client->get($url);
-        return json_decode($response->getBody(), true);
+        return json_decode((string)$response->getBody(), true);
     }
     /**
      * @return stdClass The JSON object
@@ -65,35 +66,29 @@ class OnBoardService
         return self::doJsonQuery($url);
     }
 
-    public static function legislation_find(array $fields)
+    /**
+     * @param array $params  Parameters for legislation query
+     */
+    public static function legislation_list(array $params)
     {
-        $fields['format'] = 'json';
-        $params = http_build_query($fields);
-        $url = self::getUrl()."/legislation?$params";
+        $params['format'] = 'json';
+        $url = self::getUrl()."/legislation?".http_build_query($params);
         return self::doJsonQuery($url);
     }
 
-    public static function legislation_list($committee_id, $year)
+    public static function legislation_years($committee_id, $type)
     {
-        $url = self::getUrl()."/legislation?format=json;committee_id=$committee_id;year=$year";
-        return self::doJsonQuery($url);
-    }
-
-    public static function legislation_info($legislation_id)
-    {
-        $url = self::getUrl()."/legislation/view?format=json;legislation_id=$legislation_id";
-        return self::doJsonQuery($url);
-    }
-
-    public static function legislation_years($committee_id)
-    {
-        $url = self::getUrl()."/legislation/years?format=json;committee_id=$committee_id";
+        $url = self::getUrl()."/legislation/years?format=json;committee_id=$committee_id;type=$type";
         return self::doJsonQuery($url);
     }
 
     public static function legislation_types()
     {
-        $url = self::getUrl()."/legislationTypes?format=json";
-        return self::doJsonQuery($url);
+        static $types = null;
+        if (!$types) {
+            $url   = self::getUrl()."/legislationTypes?format=json";
+            $types = self::doJsonQuery($url);
+        }
+        return $types;
     }
 }
