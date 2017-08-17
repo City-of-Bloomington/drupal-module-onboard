@@ -34,7 +34,8 @@
     {% endfor %}
 </div>
 <div>
-    <a href="{{ path('onboard.meetings.node-'~nid, {'node': nid}) }}" class="button">Meetings</a>
+    {% set year  = 'now'|date('Y') %}
+    <a href="{{ path('onboard.meetingList.node-'~nid, {'node':nid, 'year':year}) }}" class="button">Meetings</a>
     <a href="https://calendar.google.com/calendar/embed?src={{ calendarId }}&ctz=America/New_York" class="button">Calendar</a>
     {% if committee.info.videoArchive %}
     <a href="{{ committee.info.videoArchive }}" class="button">Videos</a>

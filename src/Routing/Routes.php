@@ -44,13 +44,12 @@ class Routes
                 $committee_id = $node->get($field)->value;
 
                 $alias = $aliasManager->getAliasByPath("/node/$nid");
-                $routes["onboard.meetings.node-$nid"] = new Route(
+                $routes["onboard.meetingList.node-$nid"] = new Route(
                     "$alias/meetings/{year}",
                     [
                         '_controller' => '\Drupal\onboard\Controller\OnBoardController::meetings',
                         '_title'      => 'Meetings',
-                        'node'        => $nid,
-                        'year'        => 0
+                        'node'        => $nid
                     ],
                     [
                         '_permission' => 'access content',
@@ -58,8 +57,8 @@ class Routes
                     ],
                     ['parameters' => ['node' => ['type'=>'entity:node']]]
                 );
-                $routes["onboard.meetings.years.node-$nid"] = new Route(
-                    "$alias/meetings/archive",
+                $routes["onboard.meetingYears.node-$nid"] = new Route(
+                    "$alias/meetings",
                     [
                         '_controller' => '\Drupal\onboard\Controller\OnBoardController::meetingYears',
                         '_title'      => 'Archive',
