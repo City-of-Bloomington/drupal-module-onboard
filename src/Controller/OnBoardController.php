@@ -38,6 +38,7 @@ class OnBoardController extends ControllerBase
 
             return [
                 '#theme'    => 'onboard_meetingFiles',
+                '#title'    => $year,
                 '#meetings' => $meetings,
                 '#year'     => $year,
                 '#years'    => $years,
