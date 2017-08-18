@@ -37,11 +37,11 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
             $type   = $route_match->getParameter('type'  );
             $year   = $route_match->getParameter('year'  );
             $number = $route_match->getParameter('number');
-            if ($type) {
+            if ($year) {
                 $params['type'] = $type;
                 $breadcrumb->addLink(Link::createFromRoute($type, "onboard.legislationYears.node-$nid", $params));
             }
-            if ($year) {
+            if ($number) {
                 $params['year'] = $year;
                 $breadcrumb->addLink(Link::createFromRoute($year, "onboard.legislationList.node-$nid", $params));
             }

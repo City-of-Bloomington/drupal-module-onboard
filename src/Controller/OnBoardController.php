@@ -100,6 +100,7 @@ class OnBoardController extends ControllerBase
 
             return [
                 '#theme'       => 'onboard_legislationList',
+                '#title'       => $year,
                 '#legislation' => $legislation,
                 '#type'        => $type,
                 '#year'        => $year,
@@ -126,6 +127,7 @@ class OnBoardController extends ControllerBase
 
             return [
                 '#theme'   => 'onboard_legislationYears',
+                '#title'   => $type,
                 '#decades' => $decades,
                 '#node'    => $node,
                 '#type'    => $type,
@@ -150,7 +152,7 @@ class OnBoardController extends ControllerBase
             if (count($list) == 1) {
                 return [
                     '#theme'       => 'onboard_legislationInfo',
-                    '#title'       => $number,
+                    '#title'       => "$type $number",
                     '#legislation' => $list[0],
                     '#node'        => $node
                 ];

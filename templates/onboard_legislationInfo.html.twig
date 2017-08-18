@@ -13,8 +13,7 @@
 #}
 <section>
     <header>
-        <h2>{{ legislation.year }} {{ legislation.type }} {{ legislation.number }}</h2>
-        <h3>{{ legislation.title }}</h3>
+        <h2>{{ legislation.title }}</h2>
     </header>
     <p>{{ legislation.synopsis }}</p>
 
@@ -36,5 +35,4 @@
         <a class="download button" href="{{ f.url }}">Download</a>
         {% endfor %}
     {% endif %}
-
 </section>

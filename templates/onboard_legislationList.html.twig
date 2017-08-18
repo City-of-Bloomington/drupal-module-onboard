@@ -16,7 +16,6 @@
 #}
 <section>
     <header>
-        <h2>{{ year }}</h2>
         <div class="tools">
             {% set route = 'onboard.legislationList.node-' ~ node.id %}
             {% for y in years %}
@@ -34,8 +33,9 @@
     {% for l in legislation %}
     {% set route = 'onboard.legislationInfo.node-' ~ node.id %}
     {% set url   = path(route, {'node':node.id, 'type':type, 'year':year, 'number':l.number}) %}
-    <tr><td><a href="{{ url }}">{{ l.type }}</a></td>
+    <tr><td><a href="{{ url }}">{{ l.type   }}</a></td>
         <td><a href="{{ url }}">{{ l.number }}</a></td>
+        <td><a href="{{ url }}">{{ l.status }}</a></td>
         <td>{% for file in l.files %}
             <a href="{{ file.url }}">Download</a>
             {% endfor %}

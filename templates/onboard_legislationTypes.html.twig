@@ -11,16 +11,16 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
  */
 #}
-<section>
+<section id="legislationTypes">
     <div>
-    {% set year  = 'now'|date('Y') %}
-    {% set route = 'onboard.legislationList.node-' ~ node.id %}
-    {% for t in types %}
-    <article>
-        <a href="{{ path(route, {'node':node.id, 'type':t, 'year':year}) }}">
-            <header><h3>{{ t }}</h3></header>
-        </a>
-    </article>
-    {% endfor %}
+        {% set year  = 'now'|date('Y') %}
+        {% set route = 'onboard.legislationList.node-' ~ node.id %}
+        {% for t in types %}
+        <article>
+            <a href="{{ path(route, {'node':node.id, 'type':t, 'year':year}) }}">
+                <header><h3>{{ t }}</h3></header>
+            </a>
+        </article>
+        {% endfor %}
     </div>
 </section>
