@@ -48,6 +48,25 @@ class OnBoardController extends ControllerBase
         return [];
     }
 
+    public function reports($node)
+    {
+        $field = $this->getCommitteeIdField();
+
+        if ($node->hasField($field) && $node->$field->value) {
+            $committee_id = $node->$field->value;
+
+            $reports = OnBoardService::reports($committee_id);
+
+            return [
+                '#theme'   => 'onboard_reports',
+                '#title'   => 'Reports',
+                '#reports' => $reports,
+                '#node'    => $node
+            ];
+        }
+        return [];
+    }
+
     public function legislationTypes($node)
     {
         $field = $this->getCommitteeIdField();

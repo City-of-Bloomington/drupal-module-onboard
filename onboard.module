@@ -86,6 +86,13 @@ function onboard_theme()
                 'node'    => null,
                 'type'    => null
             ]
+        ],
+        'onboard_reports' => [
+            'template' => 'onboard_reports',
+            'variables' => [
+                'reports' => null,
+                'node'    => null
+            ]
         ]
     ];
 }

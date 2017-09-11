@@ -67,8 +67,16 @@ class Routes
                     ['_permission' => 'access content' ],
                     ['parameters'  => ['node' => ['type'=>'entity:node']]]
                 );
-
-
+                $routes["onboard.reports.node-$nid"] = new Route(
+                    "$alias/reports",
+                    [
+                        '_controller' => '\Drupal\onboard\Controller\OnBoardController::reports',
+                        '_title'      => 'Reports',
+                        'node'        => $nid
+                    ],
+                    ['_permission' => 'access content' ],
+                    ['parameters'  => ['node' => ['type'=>'entity:node']]]
+                );
 
                 if (in_array((int)$committee_id, self::$legislative)) {
                     $routes["onboard.legislationTypes.node-$nid"] = new Route(

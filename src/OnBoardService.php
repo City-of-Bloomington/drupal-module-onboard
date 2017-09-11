@@ -91,4 +91,10 @@ class OnBoardService
         }
         return $types;
     }
+
+    public static function reports($committee_id)
+    {
+        $url = self::getUrl()."/reports?format=json;committee_id=$committee_id";
+        return self::doJsonQuery($url);
+    }
 }

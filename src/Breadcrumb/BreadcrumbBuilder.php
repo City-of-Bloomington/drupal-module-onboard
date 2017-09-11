@@ -16,7 +16,7 @@ class BreadcrumbBuilder implements BreadcrumbBuilderInterface
     public function applies(RouteMatchInterface $route_match)
     {
         $name = explode('.', $route_match->getRouteName());
-        return $name[0] == 'onboard';
+        return $name[0] == 'onboard' && $name[1]!='settings';
     }
 
     public function build(RouteMatchInterface $route_match)
