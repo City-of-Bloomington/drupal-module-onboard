@@ -10,6 +10,7 @@ use Drupal\onboard\OnBoardService;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -27,6 +28,11 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
 {
     const DEFAULT_NUMDAYS   = 7;
     const DEFAULT_MAXEVENTS = 4;
+
+    public function getCacheContexts()
+    {
+        return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
+    }
 
     public function build()
     {
@@ -47,7 +53,8 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
 
                 $c        = 0;
                 $meetings = [];
-                foreach (OnBoardService::meetings($id,  null, $start, $end) as $m) {
+                $temp = OnBoardService::meetings($id,  null, $start, $end);
+                foreach ($temp as $m) {
                     $c++;
                     if ($c > $maxevents) { break; }
                     $meetings[] = $m;
