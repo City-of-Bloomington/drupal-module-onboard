@@ -97,4 +97,18 @@ class OnBoardService
         $url = self::getUrl()."/reports?format=json;committee_id=$committee_id";
         return self::doJsonQuery($url);
     }
+
+    /**
+     * @param  $type string
+     * @return       boolean
+     */
+    public static function typeExists($type)
+    {
+        foreach (self::legislation_types() as $t) {
+            if ($t['name'] == $type) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

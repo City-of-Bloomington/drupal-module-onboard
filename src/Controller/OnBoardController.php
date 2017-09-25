@@ -9,6 +9,7 @@ use Drupal\onboard\OnBoardService;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Form\FormState;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class OnBoardController extends ControllerBase
 {
@@ -45,7 +46,7 @@ class OnBoardController extends ControllerBase
                 '#node'     => $node
             ];
         }
-        return [];
+        throw new NotFoundHttpException();
     }
 
     public function reports($node)
@@ -64,7 +65,7 @@ class OnBoardController extends ControllerBase
                 '#node'    => $node
             ];
         }
-        return [];
+        throw new NotFoundHttpException();
     }
 
     public function legislationTypes($node)
@@ -83,12 +84,16 @@ class OnBoardController extends ControllerBase
                 '#node'  => $node
             ];
         }
+        throw new NotFoundHttpException();
     }
 
     public function legislationList($node, $type, $year)
     {
-        $field = $this->getCommitteeIdField();
+        if (!OnBoardService::typeExists($type)) {
+            throw new NotFoundHttpException();
+        }
 
+        $field  = $this->getCommitteeIdField();
         if ($node->hasField($field) && $node->$field->value) {
             $year = $year ? (int)$year : (int)date('Y');
 
@@ -128,11 +133,14 @@ class OnBoardController extends ControllerBase
                 '#node'        => $node
             ];
         }
-        return [];
+        throw new NotFoundHttpException();
     }
 
     public function legislationYears($node, $type)
     {
+        if (!OnBoardService::typeExists($type)) {
+            throw new NotFoundHttpException();
+        }
         $field = $this->getCommitteeIdField();
 
         if ($node->hasField($field) && $node->$field->value) {
@@ -154,10 +162,14 @@ class OnBoardController extends ControllerBase
                 '#route'   => 'onboard.legislationList.node-'.$node->get('nid')->value
             ];
         }
+        throw new NotFoundHttpException();
     }
 
     public function legislationInfo($node, $type, $year, $number)
     {
+        if (!OnBoardService::typeExists($type)) {
+            throw new NotFoundHttpException();
+        }
         $field = $this->getCommitteeIdField();
 
         if ($node->hasField($field) && $node->$field->value) {
@@ -178,6 +190,7 @@ class OnBoardController extends ControllerBase
                 ];
             }
         }
+        throw new NotFoundHttpException();
     }
 
     public function meetingYears($node)
@@ -201,6 +214,7 @@ class OnBoardController extends ControllerBase
                 '#route'   => 'onboard.meetings.node-'.$node->get('nid')->value
             ];
         }
+        throw new NotFoundHttpException();
     }
 
     public function legislationView($node, $type, $number)
@@ -221,6 +235,6 @@ class OnBoardController extends ControllerBase
 
             ];
         }
-        return [];
+        throw new NotFoundHttpException();
     }
 }
