@@ -35,7 +35,11 @@
         <td>{% for type, files in meeting.files %}
                 {% for c, file in files %}
                 <a href="{{ file.url }}">
+                    {% if file.title %}
+                    {{ file.title }},
+                    {% else %}
                     {{ type }}{% if c %} ({{ c }}){% endif %},
+                    {% endif %}
                 </a>
                 {% endfor %}
             {% endfor %}
