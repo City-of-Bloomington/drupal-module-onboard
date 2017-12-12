@@ -9,6 +9,7 @@ use Drupal\onboard\OnBoardService;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
@@ -24,6 +25,11 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class MembersBlock extends BlockBase implements BlockPluginInterface
 {
+    public function getCacheContexts()
+    {
+        return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -46,12 +52,12 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
                         return ($as <  $bs) ? -1 : 1;
                      });
                 }
-
                 return [
                     '#theme'       => 'onboard_members',
                     '#committee'   => $json,
                     '#nid'         => $node->id(),
-                    '#onboard_url' => OnBoardService::getUrl()
+                    '#onboard_url' => OnBoardService::getUrl(),
+                    '#cache'       => ['max-age' => 3600]
                 ];
             }
         }

@@ -10,6 +10,7 @@ use Drupal\onboard\OnBoardService;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
+use Drupal\Core\Cache\Cache;
 
 /**
  * Displays reports for a committee from OnBoard.
@@ -24,6 +25,11 @@ use Drupal\Core\Block\BlockPluginInterface;
  */
 class ReportsBlock extends BlockBase implements BlockPluginInterface
 {
+    public function getCacheContexts()
+    {
+        return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
+    }
+
     public function build()
     {
         $settings  = \Drupal::config('onboard.settings');
@@ -40,7 +46,8 @@ class ReportsBlock extends BlockBase implements BlockPluginInterface
                         '#theme'       => 'onboard_reports',
                         '#reports'     => $json,
                         '#nid'         => $node->id(),
-                        '#onboard_url' => OnBoardService::getUrl()
+                        '#onboard_url' => OnBoardService::getUrl(),
+                        '#cache'       => ['max-age' => 3600]
                     ];
                 }
             }

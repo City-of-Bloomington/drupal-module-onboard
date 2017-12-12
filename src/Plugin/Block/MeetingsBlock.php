@@ -64,7 +64,8 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
                     '#theme'     => 'onboard_upcoming_meetings',
                     '#meetings'  => $meetings,
                     '#committee' => $committee,
-                    '#nid'       => $node->id()
+                    '#nid'       => $node->id(),
+                    '#cache'     => ['max-age' => 3600]
                 ];
             }
         }
