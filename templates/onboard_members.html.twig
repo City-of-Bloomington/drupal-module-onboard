@@ -17,8 +17,14 @@
     {% if not seat.vacant %}
     {% if seat.currentMember.website %}<a href="{{ seat.currentMember.website }}">{% endif %}
     <div class="member">
-        <h3>{{ seat.currentMember.firstname }} {{ seat.currentMember.lastname }}</h3>
+        <h3>{{ seat.currentMember.firstname }} {{ seat.currentMember.lastname }}
+            {% if  seat.currentMember.offices %}
+            <div>{{ seat.currentMember.offices }}</div>
+            {% endif %}
+        </h3>
         <dl>{% if seat.appointedBy %}
+            <dt>Offices</dt>
+            <dd>{{ }}</dd>
             <dt>Appointed By:</dt>
             <dd>{{ seat.appointedBy }}</dd>
             {% endif %}
