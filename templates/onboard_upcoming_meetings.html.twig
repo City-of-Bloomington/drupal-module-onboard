@@ -36,7 +36,9 @@
 <div>
     {% set year  = 'now'|date('Y') %}
     <a href="{{ path('onboard.meetingList.node-'~nid, {'node':nid, 'year':year}) }}" class="button">Meetings</a>
+    {% if committee.info.calendarId %}
     <a href="https://calendar.google.com/calendar/embed?src={{ committee.info.calendarId }}&amp;ctz=America/New_York" class="button">Calendar</a>
+    {% endif %}
     {% if committee.info.videoArchive %}
     <a href="{{ committee.info.videoArchive }}" class="button">Videos</a>
     {% endif %}
