@@ -36,10 +36,11 @@
                 {% for c, file in files %}
                 <a href="{{ file.url }}">
                     {% if file.title %}
-                    {{ file.title }},
+                    {{ file.title }}
                     {% else %}
-                    {{ type }}{% if c %} ({{ c }}){% endif %},
+                    {{ type }}{% if c %} ({{ c }}){% endif %}
                     {% endif %}
+                    {% if not loop.last %},{% endif %}
                 </a>
                 {% endfor %}
             {% endfor %}
