@@ -11,16 +11,19 @@
  * @copyright 2018 City of Bloomington, Indiana
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
 #}
-<div>
+<nav>
     {% set year  = 'now'|date('Y') %}
-    <a href="{{ path('onboard.meetingList.node-'~nid, {'node':nid, 'year':year}) }}" class="button">Meetings</a>
+    <a href="{{ path('onboard.meetingList.node-'~nid, {'node':nid, 'year':year}) }}">Meetings</a>
     {% if committee.info.calendarId %}
-    <a href="https://calendar.google.com/calendar/embed?src={{ committee.info.calendarId }}&amp;ctz=America/New_York" class="button">Calendar</a>
+    <a href="https://calendar.google.com/calendar/embed?src={{ committee.info.calendarId }}&amp;ctz=America/New_York">Calendar</a>
     {% endif %}
     {% if committee.info.videoArchive %}
-    <a href="{{ committee.info.videoArchive }}" class="button">Videos</a>
+    <a href="{{ committee.info.videoArchive }}">Videos</a>
     {% endif %}
     {% if committee.info.legislative %}
-    <a href="{{ path('onboard.legislationTypes.node-'~nid, {'node': nid}) }}" class="button">Legislation</a>
+    <a href="{{ path('onboard.legislationTypes.node-'~nid, {'node': nid}) }}">Legislation</a>
     {% endif %}
-</div>
+    {% if committee.info.vacancy %}
+    <a href="{{ onboard_url }}/applicants/apply?committee_id={{ committee.info.id }}">Vacancy:Apply</a>
+    {% endif %}
+</nav>
