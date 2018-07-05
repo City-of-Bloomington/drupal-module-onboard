@@ -24,6 +24,14 @@
     <a href="{{ path('onboard.legislationTypes.node-'~nid, {'node': nid}) }}">Legislation</a>
     {% endif %}
     {% if committee.info.vacancy %}
-    <a href="{{ onboard_url }}/applicants/apply?committee_id={{ committee.info.id }}">Vacancy:Apply</a>
+        {% set applyable = false %}
+        {% for seat in committee.seats %}
+            {% if seat.vacant and seat.takesApplications %}
+                {% set applyable = true %}
+            {% endif %}
+        {% endfor %}
+        {% if applyable %}
+            <a href="{{ onboard_url }}/applicants/apply?committee_id={{ committee.info.id }}">Vacancy:Apply</a>
+        {% endif %}
     {% endif %}
 </nav>

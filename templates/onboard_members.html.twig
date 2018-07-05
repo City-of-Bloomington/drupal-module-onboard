@@ -23,8 +23,6 @@
             {% endif %}
         </h3>
         <dl>{% if seat.appointedBy %}
-            <dt>Offices</dt>
-            <dd>{{ }}</dd>
             <dt>Appointed By:</dt>
             <dd>{{ seat.appointedBy }}{% if seat.voting %} (Voting){% endif %}</dd>
             {% endif %}
@@ -41,7 +39,11 @@
     {% if seat.currentMember.website %}</a>{% endif %}
     {% else %}
     <div class="member">
-        <h3>Vacant
+        <h3>{% if seat.takesApplications %}
+                <a href="{{ onboard_url }}/applicants/apply?committee_id={{ committee.info.id }}">Vacancy:Apply</a>
+            {% else %}
+                Vacant
+            {% endif %}
             {% if seat.currentMember.firstname %}
             ({{ seat.currentMember.firstname }} {{ seat.currentMember.lastname }})
             {% endif %}
