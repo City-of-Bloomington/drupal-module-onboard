@@ -20,7 +20,11 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "onboard_meetings_block",
  *   admin_label = "Committee Meetings",
  *   context = {
- *     "node" = @ContextDefinition("entity:node")
+ *     "node" = @ContextDefinition(
+ *          "entity:node",
+ *          label = "Current Node",
+ *          required = FALSE
+ *      )
  *   }
  * )
  */
@@ -29,44 +33,44 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
     const DEFAULT_NUMDAYS   = 7;
     const DEFAULT_MAXEVENTS = 4;
 
-    public function getCacheContexts()
-    {
-        return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
-    }
-
     public function build()
     {
-        $settings  = \Drupal::config('onboard.settings');
-        $fieldname = $settings->get('onboard_committee_field');
-        $config    = $this->getConfiguration();
-        $node      = $this->getContextValue('node');
+        $node = $this->getContextValue('node');
+        if ($node) {
+            $settings  = \Drupal::config('onboard.settings');
+            $fieldname = $settings->get('onboard_committee_field');
+            $config    = $this->getConfiguration();
 
-        $numdays   = !empty($config['numdays'  ]) ? (int)$config['numdays'  ] : self::DEFAULT_NUMDAYS;
-        $maxevents = !empty($config['maxevents']) ? (int)$config['maxevents'] : self::DEFAULT_MAXEVENTS;
+            $numdays   = !empty($config['numdays'  ]) ? (int)$config['numdays'  ] : self::DEFAULT_NUMDAYS;
+            $maxevents = !empty($config['maxevents']) ? (int)$config['maxevents'] : self::DEFAULT_MAXEVENTS;
 
-        if ($node->hasField( $fieldname)) {
-            $id = $node->get($fieldname)->value;
-            if ($id) {
-                $start = new \DateTime();
-                $end   = new \DateTime();
-                $end->add(new \DateInterval("P{$numdays}D"));
+            if ($node->hasField( $fieldname)) {
+                $id = $node->get($fieldname)->value;
+                if ($id) {
+                    $start = new \DateTime();
+                    $end   = new \DateTime();
+                    $end->add(new \DateInterval("P{$numdays}D"));
 
-                $c        = 0;
-                $meetings = [];
-                $temp = OnBoardService::meetings($id,  null, $start, $end);
-                foreach ($temp as $m) {
-                    $c++;
-                    if ($c > $maxevents) { break; }
-                    $meetings[] = $m;
+                    $c        = 0;
+                    $meetings = [];
+                    $temp = OnBoardService::meetings($id,  null, $start, $end);
+                    foreach ($temp as $m) {
+                        $c++;
+                        if ($c > $maxevents) { break; }
+                        $meetings[] = $m;
+                    }
+                    $committee = OnBoardService::committee_info($id);
+                    return [
+                        '#theme'     => 'onboard_upcoming_meetings',
+                        '#meetings'  => $meetings,
+                        '#committee' => $committee,
+                        '#nid'       => $node->id(),
+                        '#cache'       => [
+                            'contexts' => ['route'],
+                            'max-age'  => 3600
+                        ]
+                    ];
                 }
-                $committee = OnBoardService::committee_info($id);
-                return [
-                    '#theme'     => 'onboard_upcoming_meetings',
-                    '#meetings'  => $meetings,
-                    '#committee' => $committee,
-                    '#nid'       => $node->id(),
-                    '#cache'     => ['max-age' => 3600]
-                ];
             }
         }
     }

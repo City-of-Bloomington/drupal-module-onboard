@@ -20,38 +20,41 @@ use Drupal\Core\Form\FormStateInterface;
  *   id = "onboard_links_block",
  *   admin_label = "Board Links",
  *   context = {
- *     "node" = @ContextDefinition("entity:node")
+ *     "node" = @ContextDefinition(
+ *          "entity:node",
+ *          label = "Current Node",
+ *          required = FALSE
+ *      )
  *   }
  * )
  */
 class LinksBlock extends BlockBase implements BlockPluginInterface
 {
-    public function getCacheContexts()
-    {
-        return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
-    }
-
     /**
      * {@inheritdoc}
      */
     public function build()
     {
-        $settings  = \Drupal::config('onboard.settings');
-        $fieldname = $settings->get('onboard_committee_field');
-        $node      = $this->getContextValue('node');
+        $node = $this->getContextValue('node');
+        if ($node) {
+            $settings  = \Drupal::config('onboard.settings');
+            $fieldname = $settings->get('onboard_committee_field');
 
-
-        if ($node->hasField( $fieldname)) {
-            $id = $node->get($fieldname)->value;
-            if ($id) {
-                $json = OnBoardService::committee_info($id);
-                return [
-                    '#theme'       => 'onboard_links',
-                    '#committee'   => $json,
-                    '#nid'         => $node->id(),
-                    '#onboard_url' => OnBoardService::getUrl(),
-                    '#cache'       => ['max-age' => 3600]
-                ];
+            if ($node->hasField( $fieldname)) {
+                $id = $node->get($fieldname)->value;
+                if ($id) {
+                    $json = OnBoardService::committee_info($id);
+                    return [
+                        '#theme'       => 'onboard_links',
+                        '#committee'   => $json,
+                        '#nid'         => $node->id(),
+                        '#onboard_url' => OnBoardService::getUrl(),
+                        '#cache'       => [
+                            'contexts' => ['route'],
+                            'max-age'  => 3600
+                        ]
+                    ];
+                }
             }
         }
     }

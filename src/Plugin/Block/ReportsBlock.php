@@ -19,36 +19,40 @@ use Drupal\Core\Cache\Cache;
  *   id = "onboard_reports_block",
  *   admin_label = "Committee Reports",
  *   context = {
- *     "node" = @ContextDefinition("entity:node")
+ *     "node" = @ContextDefinition(
+ *          "entity:node",
+ *          label = "Current Node",
+ *          required = FALSE
+ *      )
  *   }
  * )
  */
 class ReportsBlock extends BlockBase implements BlockPluginInterface
 {
-    public function getCacheContexts()
-    {
-        return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
-    }
-
     public function build()
     {
-        $settings  = \Drupal::config('onboard.settings');
-        $fieldname = $settings->get('onboard_committee_field');
-        $node      = $this->getContextValue('node');
+        $node = $this->getContextValue('node');
+        if ($node) {
+            $settings  = \Drupal::config('onboard.settings');
+            $fieldname = $settings->get('onboard_committee_field');
 
 
-        if ($node->hasField( $fieldname)) {
-            $id = $node->get($fieldname)->value;
-            if ($id) {
-                $json = OnBoardService::reports($id);
-                if (count($json)) {
-                    return [
-                        '#theme'       => 'onboard_reports',
-                        '#reports'     => $json,
-                        '#nid'         => $node->id(),
-                        '#onboard_url' => OnBoardService::getUrl(),
-                        '#cache'       => ['max-age' => 3600]
-                    ];
+            if ($node && $node->hasField($fieldname)) {
+                $id    = $node->get($fieldname)->value;
+                if ($id) {
+                    $json = OnBoardService::reports($id);
+                    if (count($json)) {
+                        return [
+                            '#theme'       => 'onboard_reports',
+                            '#reports'     => $json,
+                            '#nid'         => $node->id(),
+                            '#onboard_url' => OnBoardService::getUrl(),
+                            '#cache'       => [
+                                'contexts' => ['route'],
+                                'max-age'  => 3600
+                            ]
+                        ];
+                    }
                 }
             }
         }
