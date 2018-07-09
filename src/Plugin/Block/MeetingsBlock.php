@@ -12,6 +12,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\Entity\Node;
 
 /**
  * Displays upcoming meetings for a committee
@@ -33,10 +34,15 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
     const DEFAULT_NUMDAYS   = 7;
     const DEFAULT_MAXEVENTS = 4;
 
+    public function getCacheContexts()
+    {
+        return Cache::mergeContexts(parent::getCacheContexts(), ['url.path']);
+    }
+
     public function build()
     {
         $node = $this->getContextValue('node');
-        if ($node) {
+        if ($node && $node instanceof Node) {
             $settings  = \Drupal::config('onboard.settings');
             $fieldname = $settings->get('onboard_committee_field');
             $config    = $this->getConfiguration();
@@ -66,7 +72,6 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
                         '#committee' => $committee,
                         '#nid'       => $node->id(),
                         '#cache'       => [
-                            'contexts' => ['route'],
                             'max-age'  => 3600
                         ]
                     ];
