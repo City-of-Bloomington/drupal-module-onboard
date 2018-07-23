@@ -57,14 +57,7 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
                     $end   = new \DateTime();
                     $end->add(new \DateInterval("P{$numdays}D"));
 
-                    $c        = 0;
-                    $meetings = [];
-                    $temp = OnBoardService::meetings($id,  null, $start, $end);
-                    foreach ($temp as $m) {
-                        $c++;
-                        if ($c > $maxevents) { break; }
-                        $meetings[] = $m;
-                    }
+                    $meetings  = OnBoardService::meetings($id,  null, $start, $end, $maxevents);
                     $committee = OnBoardService::committee_info($id);
                     return [
                         '#theme'     => 'onboard_upcoming_meetings',
