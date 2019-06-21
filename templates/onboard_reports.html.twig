@@ -16,7 +16,8 @@
         {% for r in reports %}
         <article>
             <a href="{{ r.url }}">
-                <header><h3>{{ r.title }}</h3></header>
+                <header><h3>{{ r.date|date("F j, Y") }}</h3></header>
+                <p>{{ r.title }}</p>
             </a>
         </article>
         {% endfor %}
