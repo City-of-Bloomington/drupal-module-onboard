@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017 City of Bloomington, Indiana
+ * @copyright 2017-2021 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 declare (strict_types=1);
@@ -23,11 +23,13 @@ class OnBoardService
         return json_decode((string)$response->getBody(), true);
     }
     /**
-     * @return stdClass The JSON object
+     * @param  array    $query  Search parameters for the committee list
+     * @return array            The JSON object
      */
-    public static function committee_list()
+    public static function committee_list(array $query=null): array
     {
-        $url = self::getUrl().'/committees?format=json';
+        $params = $query ? array_merge(['format' => 'json'], $query) : ['format' => 'json'];
+        $url    = self::getUrl().'/committees?'.http_build_query($params, '', ';');
         return self::doJsonQuery($url);
     }
 
