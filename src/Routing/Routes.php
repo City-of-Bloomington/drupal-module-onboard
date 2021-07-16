@@ -28,7 +28,7 @@ class Routes
 
 
         if ($types) {
-            $aliasManager = \Drupal::service('path.alias_manager');
+            $aliasManager = \Drupal::service('path_alias.manager');
             $storage      = \Drupal::entityTypeManager()->getStorage('node');
 
             $nids = \Drupal::entityQuery('node')
