@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017-2018 City of Bloomington, Indiana
+ * @copyright 2017-2021 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 declare (strict_types=1);
@@ -19,14 +19,7 @@ use Drupal\node\Entity\Node;
  *
  * @Block(
  *   id = "onboard_meetings_block",
- *   admin_label = "Committee Meetings",
- *   context = {
- *     "node" = @ContextDefinition(
- *          "entity:node",
- *          label = "Current Node",
- *          required = FALSE
- *      )
- *   }
+ *   admin_label = "Committee Meetings"
  * )
  */
 class MeetingsBlock extends BlockBase implements BlockPluginInterface
@@ -41,7 +34,7 @@ class MeetingsBlock extends BlockBase implements BlockPluginInterface
 
     public function build()
     {
-        $node = $this->getContextValue('node');
+        $node = \Drupal::routeMatch()->getParameter('node');
         if ($node && $node instanceof Node) {
             $settings  = \Drupal::config('onboard.settings');
             $fieldname = $settings->get('onboard_committee_field');

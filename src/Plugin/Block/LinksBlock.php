@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2018 City of Bloomington, Indiana
+ * @copyright 2018-2021 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 declare (strict_types=1);
@@ -11,7 +11,6 @@ use Drupal\onboard\OnBoardService;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Block\BlockPluginInterface;
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\Entity\Node;
 
 /**
@@ -19,14 +18,7 @@ use Drupal\node\Entity\Node;
  *
  * @Block(
  *   id = "onboard_links_block",
- *   admin_label = "Board Links",
- *   context = {
- *     "node" = @ContextDefinition(
- *          "entity:node",
- *          label = "Current Node",
- *          required = FALSE
- *      )
- *   }
+ *   admin_label = "Board Links"
  * )
  */
 class LinksBlock extends BlockBase implements BlockPluginInterface
@@ -38,7 +30,7 @@ class LinksBlock extends BlockBase implements BlockPluginInterface
 
     public function build()
     {
-        $node = $this->getContextValue('node');
+        $node = \Drupal::routeMatch()->getParameter('node');
         if ($node && $node instanceof Node) {
             $settings  = \Drupal::config('onboard.settings');
             $fieldname = $settings->get('onboard_committee_field');
