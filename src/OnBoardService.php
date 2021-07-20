@@ -28,9 +28,13 @@ class OnBoardService
      */
     public static function committee_list(array $query=null): array
     {
-        $params = $query ? array_merge(['format' => 'json'], $query) : ['format' => 'json'];
-        $url    = self::getUrl().'/committees?'.http_build_query($params, '', ';');
-        return self::doJsonQuery($url);
+        $base_url = self::getUrl();
+        if ($base_url) {
+            $params = $query ? array_merge(['format' => 'json'], $query) : ['format' => 'json'];
+            $url    = $base_url.'/committees?'.http_build_query($params, '', ';');
+            return self::doJsonQuery($url);
+        }
+        return [];
     }
 
     /**
