@@ -199,7 +199,10 @@ class OnBoardController extends ControllerBase
 
         if ($node->hasField($field) && $node->$field->value) {
             $committee_id = $node->$field->value;
+            $start        = new \DateTime('-90 days');
+            $end          = new \DateTime();
             $years        = OnBoardService::meetingFile_years($committee_id);
+            $meetings     = OnBoardService::meetings($committee_id, null, $start, $end);
 
             $decades = [];
             foreach ($years as $y=>$data) {
@@ -208,10 +211,11 @@ class OnBoardController extends ControllerBase
             }
 
             return [
-                '#theme'   => 'onboard_meetingYears',
-                '#decades' => $decades,
-                '#node'    => $node,
-                '#route'   => 'onboard.meetings.node-'.$node->get('nid')->value
+                '#theme'    => 'onboard_meetingYears',
+                '#decades'  => $decades,
+                '#node'     => $node,
+                '#meetings' => $meetings,
+                '#route'    => 'onboard.meetings.node-'.$node->get('nid')->value
             ];
         }
         throw new NotFoundHttpException();

@@ -6,11 +6,36 @@
  * Available variables
  * - decades:  The available years of legislation, organized by decade
  * - node:     The node object for the board page in Drupal
+ * - meetings: The JSON data from OnBoardService::meetings()
  *
- * @copyright 2017 City of Bloomington, Indiana
- * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
+ * @copyright 2017-2023 City of Bloomington, Indiana
+ * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE
  */
 #}
+<section>
+    <table>
+    {% for date, event in meetings %}
+        {% for meeting in event %}
+            <tr><th>{{ date }}</th>
+            <td>{{ meeting.summary }}</td>
+            <td>{% for type, files in meeting.files %}
+                    {% for c, file in files %}
+                    <a href="{{ file.url }}">
+                        {% if file.title %}
+                        {{ file.title }}
+                        {% else %}
+                        {{ type }}{% if c %} ({{ c }}){% endif %}
+                        {% endif %}
+                        {% if not loop.last %},{% endif %}
+                    </a>
+                    {% endfor %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    {% endfor %}
+    </table>
+</section>
 <section>
     {% set route = 'onboard.meetingList.node-' ~ node.id %}
     {% for d, years in decades %}

@@ -62,7 +62,7 @@ class OnBoardService
             $params['year'] = $year;
         }
 
-        $url = self::getUrl().'/committees/meetings?'.http_build_query($params);
+        $url      = self::getUrl().'/committees/meetings?'.http_build_query($params);
         $meetings = self::doJsonQuery($url);
         return $limit ? array_slice($meetings, 0, $limit) : $meetings;
     }
