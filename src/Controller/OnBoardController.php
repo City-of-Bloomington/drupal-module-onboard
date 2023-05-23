@@ -199,12 +199,26 @@ class OnBoardController extends ControllerBase
 
         if ($node->hasField($field) && $node->$field->value) {
             $committee_id = $node->$field->value;
+
+            $now        = new \DateTime();
             $start        = new \DateTime('-90 days');
-            $end          = new \DateTime();
-            $years        = OnBoardService::meetingFile_years($committee_id);
+            $end          = new \DateTime('+90 days');
             $meetings     = OnBoardService::meetings($committee_id, null, $start, $end);
+            $upcoming     = [];
+            $past         = [];
+            foreach ($meetings as $d => $day) {
+                foreach ($day as $event_id => $meeting) {
+                    if (!empty($meeting['files'])) {
+                        $date = new \DateTime($meeting['start']);
+                        if ($date < $now) { $past[$d] = $day; }
+                        else          { $upcoming[$d] = $day; }
+
+                    }
+                }
+            }
 
             $decades = [];
+            $years   = OnBoardService::meetingFile_years($committee_id);
             foreach ($years as $y=>$data) {
                 $d = (floor($y / 10)) * 10;
                 $decades[$d][$y] = $data;
@@ -214,7 +228,8 @@ class OnBoardController extends ControllerBase
                 '#theme'    => 'onboard_meetingYears',
                 '#decades'  => $decades,
                 '#node'     => $node,
-                '#meetings' => array_reverse($meetings),
+                '#upcoming' => $upcoming,
+                '#past'     => array_reverse($past),
                 '#route'    => 'onboard.meetings.node-'.$node->get('nid')->value
             ];
         }

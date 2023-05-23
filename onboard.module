@@ -45,7 +45,8 @@ function onboard_theme()
             'variables' => [
                 'decades' => null,
                 'node'    => null,
-                'meetings'=> null
+                'upcoming'=> null,
+                'past'    => null
             ]
         ],
         'onboard_members' => [

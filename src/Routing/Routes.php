@@ -61,7 +61,7 @@ class Routes
                     "$alias/meetings",
                     [
                         '_controller' => '\Drupal\onboard\Controller\OnBoardController::meetingYears',
-                        '_title'      => 'Meetings',
+                        '_title'      => 'Meeting Documents',
                         'node'        => $nid
                     ],
                     ['_permission' => 'access content' ],
