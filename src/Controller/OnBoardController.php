@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017 City of Bloomington, Indiana
+ * @copyright 2017-2023 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 namespace Drupal\onboard\Controller;
@@ -214,7 +214,7 @@ class OnBoardController extends ControllerBase
                 '#theme'    => 'onboard_meetingYears',
                 '#decades'  => $decades,
                 '#node'     => $node,
-                '#meetings' => $meetings,
+                '#meetings' => array_reverse($meetings),
                 '#route'    => 'onboard.meetings.node-'.$node->get('nid')->value
             ];
         }
