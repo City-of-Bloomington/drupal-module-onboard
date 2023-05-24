@@ -210,7 +210,6 @@ class OnBoardController extends ControllerBase
                 foreach ($day as $event_id => $meeting) {
                     if (!empty($meeting['files'])) {
                         $date = new \DateTime($meeting['start']);
-                        echo "{$date->format('c')} < {$tonight->format('c')}\n";
                         if ($date < $tonight) { $past[$d] = $day; }
                         else          { $upcoming[$d] = $day; }
 
