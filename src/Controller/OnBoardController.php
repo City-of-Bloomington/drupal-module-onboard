@@ -200,7 +200,7 @@ class OnBoardController extends ControllerBase
         if ($node->hasField($field) && $node->$field->value) {
             $committee_id = $node->$field->value;
 
-            $now        = new \DateTime();
+            $tonight      = new \DateTime('midnight');
             $start        = new \DateTime('-90 days');
             $end          = new \DateTime('+90 days');
             $meetings     = OnBoardService::meetings($committee_id, null, $start, $end);
@@ -210,7 +210,8 @@ class OnBoardController extends ControllerBase
                 foreach ($day as $event_id => $meeting) {
                     if (!empty($meeting['files'])) {
                         $date = new \DateTime($meeting['start']);
-                        if ($date < $now) { $past[$d] = $day; }
+                        echo "{$date->format('c')} < {$tonight->format('c')}\n";
+                        if ($date < $tonight) { $past[$d] = $day; }
                         else          { $upcoming[$d] = $day; }
 
                     }
