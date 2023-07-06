@@ -64,7 +64,10 @@ class OnBoardService
 
         $url      = self::getUrl().'/committees/meetings?'.http_build_query($params);
         $meetings = self::doJsonQuery($url);
-        return $limit ? array_slice($meetings, 0, $limit) : $meetings;
+        if ($meetings) {
+            return $limit ? array_slice($meetings, 0, $limit) : $meetings;
+        }
+        return [];
     }
 
     public static function meetingFile_years($committee_id)
