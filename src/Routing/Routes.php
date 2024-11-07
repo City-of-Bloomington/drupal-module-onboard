@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017 City of Bloomington, Indiana
+ * @copyright 2017-2024 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 declare (strict_types=1);
@@ -32,6 +32,7 @@ class Routes
             $storage      = \Drupal::entityTypeManager()->getStorage('node');
 
             $nids = \Drupal::entityQuery('node')
+                    ->accessCheck(true)
                     ->condition('status', 1)
                     ->condition('type', $types)
                     ->execute();
