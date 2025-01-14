@@ -34,7 +34,7 @@ class Routes
             $nids = \Drupal::entityQuery('node')
                     ->accessCheck(true)
                     ->condition('status', 1)
-                    ->condition('type', $types)
+                    ->condition('type', $types, 'IN')
                     ->execute();
             $nodes = $storage->loadMultiple($nids);
 
