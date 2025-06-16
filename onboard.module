@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2015-2017 City of Bloomington, Indiana
+ * @copyright 2015-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -52,7 +52,7 @@ function onboard_theme()
         'onboard_members' => [
             'template' => 'onboard_members',
             'variables' => [
-                'committee'   => null,
+                'members'     => null,
                 'nid'         => null,
                 'onboard_url' => null
             ]

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017-2021 City of Bloomington, Indiana
+ * @copyright 2017-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 declare (strict_types=1);
@@ -16,11 +16,11 @@ class OnBoardService
         return $config->get('onboard_url');
     }
 
-    private static function doJsonQuery($url)
+    private static function doJsonQuery($url): array
     {
         $client   = \Drupal::httpClient();
         $response = $client->get($url);
-        return json_decode((string)$response->getBody(), true);
+        return json_decode((string)$response->getBody(), true) ?? [];
     }
     /**
      * @param  array    $query  Search parameters for the committee list
@@ -37,19 +37,21 @@ class OnBoardService
         return [];
     }
 
-    /**
-     * @param  int      $committee_id
-     * @return stdClass               The json object
-     */
-    public static function committee_info($committee_id)
+    public static function committee_info(int $committee_id): array
     {
-        $url = self::getUrl().'/committees/members?format=json;committee_id='.$committee_id;
+        $url = self::getUrl()."/committees/$committee_id?format=json";
         return self::doJsonQuery($url);
     }
 
-    public static function meetings($committee_id, $year=null, \DateTime $start=null, \DateTime $end=null, ?int $limit=0): array
+    public static function members(int $committee_id): array
     {
-        $params = ['committee_id'=>$committee_id, 'format'=>'json'];
+        $url = self::getUrl()."/committees/$committee_id/members?format=json";
+        return self::doJsonQuery($url);
+    }
+
+    public static function meetings(int $committee_id, ?int $year=null, ?\DateTime $start=null, ?\DateTime $end=null, ?int $limit=0): array
+    {
+        $params = ['format'=>'json'];
         if ($start) {
             if (!$end) {
                 $end = clone $start;
@@ -62,7 +64,7 @@ class OnBoardService
             $params['year'] = $year;
         }
 
-        $url      = self::getUrl().'/committees/meetings?'.http_build_query($params);
+        $url      = self::getUrl()."/committees/$committee_id/meetings?".http_build_query($params);
         $meetings = self::doJsonQuery($url);
         if ($meetings) {
             return $limit ? array_slice($meetings, 0, $limit) : $meetings;
@@ -70,25 +72,26 @@ class OnBoardService
         return [];
     }
 
-    public static function meetingFile_years($committee_id)
+    public static function meetingFile_years(int $committee_id)
     {
         $url = self::getUrl()."/meetingFiles/years?format=json;committee_id=$committee_id";
         return self::doJsonQuery($url);
     }
 
     /**
-     * @param array $params  Parameters for legislation query
+     * @param in    $committee_id
+     * @param array $params        Additional search parameters
      */
-    public static function legislation_list(array $params)
+    public static function legislation_list(int $committee_id, array $params)
     {
         $params['format'] = 'json';
-        $url = self::getUrl()."/legislation?".http_build_query($params);
+        $url = self::getUrl()."/committees/$committee_id/legislation?".http_build_query($params);
         return self::doJsonQuery($url);
     }
 
-    public static function legislation_years($committee_id, $type)
+    public static function legislation_years(int $committee_id, int $type_id)
     {
-        $url = self::getUrl()."/legislation/years?format=json;committee_id=$committee_id;type=$type";
+        $url = self::getUrl()."/committees/$committee_id/legislation/years?format=json;type_id=$type_id";
         return self::doJsonQuery($url);
     }
 
@@ -102,23 +105,19 @@ class OnBoardService
         return $types;
     }
 
-    public static function reports($committee_id)
+    public static function reports(int $committee_id)
     {
         $url = self::getUrl()."/reports?format=json;committee_id=$committee_id";
         return self::doJsonQuery($url);
     }
 
-    /**
-     * @param  $type string
-     * @return       boolean
-     */
-    public static function typeExists($type)
+    public static function type_id(string $type): ?int
     {
         foreach (self::legislation_types() as $t) {
             if ($t['name'] == $type) {
-                return true;
+                return (int)$t['id'];
             }
         }
-        return false;
+        return null;
     }
 }

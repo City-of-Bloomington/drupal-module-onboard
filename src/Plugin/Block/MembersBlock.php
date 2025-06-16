@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017-2021 City of Bloomington, Indiana
+ * @copyright 2017-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 namespace Drupal\onboard\Plugin\Block;
@@ -36,20 +36,20 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
 
 
             if ($node->hasField( $fieldname)) {
-                $id = $node->get($fieldname)->value;
+                $id = (int)$node->get($fieldname)->value;
                 if ($id) {
-                    $json = OnBoardService::committee_info($id);
-                    if (!empty($json['seats'])) {
-                        usort($json['seats'], function ($a, $b) {
-                            $as = $a['vacant'] ? 'Vacant' : $a['currentMember']['lastname'];
-                            $bs = $b['vacant'] ? 'Vacant' : $b['currentMember']['lastname'];
+                    $json = OnBoardService::members($id);
+                    if (isset($json[0]['committee_id'])) {
+                        usort($json, function ($a, $b) {
+                            $as = (!$a['member_id'] || $a['carryOver']) ? 'Vacant' : $a['member_lastname'];
+                            $bs = (!$b['member_id'] || $b['carryOver']) ? 'Vacant' : $b['member_lastname'];
                             if     ($as == $bs) { return 0; }
                             return ($as <  $bs) ? -1 : 1;
                         });
                     }
                     return [
                         '#theme'       => 'onboard_members',
-                        '#committee'   => $json,
+                        '#members'     => $json,
                         '#nid'         => $node->id(),
                         '#onboard_url' => OnBoardService::getUrl(),
                         '#cache'       => [

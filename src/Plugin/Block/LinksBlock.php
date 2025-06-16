@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2018-2021 City of Bloomington, Indiana
+ * @copyright 2018-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 declare (strict_types=1);
@@ -36,7 +36,7 @@ class LinksBlock extends BlockBase implements BlockPluginInterface
             $fieldname = $settings->get('onboard_committee_field');
 
             if ($node->hasField( $fieldname)) {
-                $id = $node->get($fieldname)->value;
+                $id = (int)$node->get($fieldname)->value;
                 if ($id) {
                     $json = OnBoardService::committee_info($id);
                     return [

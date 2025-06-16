@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017-2021 City of Bloomington, Indiana
+ * @copyright 2017-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 declare (strict_types=1);
@@ -37,7 +37,7 @@ class ReportsBlock extends BlockBase implements BlockPluginInterface
 
 
             if ($node && $node->hasField($fieldname)) {
-                $id    = $node->get($fieldname)->value;
+                $id    = (int)$node->get($fieldname)->value;
                 if ($id) {
                     $json = OnBoardService::reports($id);
                     if (count($json)) {

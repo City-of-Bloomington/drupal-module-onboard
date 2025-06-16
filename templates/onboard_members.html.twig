@@ -4,7 +4,7 @@
  * Displays the list of Members for a Committee
  *
  * Available variables
- * - committee:   JSON object from OnBoard containing committee information
+ * - members:     JSON from OnBoard
  * - nid:         The current node ID
  * - onboard_url: The base url for OnBoard
  *
@@ -13,13 +13,13 @@
  */
 #}
 <div class="seats">
-{% for seat in committee.seats %}
-    {% if not seat.vacant %}
-    {% if seat.currentMember.website %}<a href="{{ seat.currentMember.website }}">{% endif %}
+{% for seat in members %}
+    {% if seat.member_id and not seat.carryOver %}
+    {% if seat.member_website %}<a href="{{ seat.member_website }}">{% endif %}
     <div class="member">
-        <h3>{{ seat.currentMember.firstname }} {{ seat.currentMember.lastname }}
-            {% if  seat.currentMember.offices %}
-            <div>{{ seat.currentMember.offices }}</div>
+        <h3>{{ seat.member_firstname }} {{ seat.member_lastname }}
+            {% if  seat.member_offices %}
+            <div>{{ seat.member_offices }}</div>
             {% endif %}
         </h3>
         <dl>{% if seat.appointedBy %}
@@ -27,16 +27,16 @@
             <dd>{{ seat.appointedBy }}{% if seat.voting %} (Voting){% endif %}</dd>
             {% endif %}
 
-            {% if seat.currentMember.termEndDate %}
+            {% if seat.member_termEndDate %}
             <dt>Term Expires:</dt>
-            <dd>{{ seat.currentMember.termEndDate }}</dd>
+            <dd>{{ seat.member_termEndDate }}</dd>
             {% else %}
             <dt>Member Since:</dt>
-            <dd>{{ seat.currentMember.termStartDate ?? seat.currentMember.startDate }}</dd>
+            <dd>{{ seat.member_termStartDate ?? seat.member_startDate }}</dd>
             {% endif %}
         </dl>
     </div>
-    {% if seat.currentMember.website %}</a>{% endif %}
+    {% if seat.member_website %}</a>{% endif %}
     {% else %}
     <div class="member">
         <h3>{% if seat.takesApplications %}
@@ -44,8 +44,8 @@
             {% else %}
                 Vacant
             {% endif %}
-            {% if seat.currentMember.firstname %}
-            ({{ seat.currentMember.firstname }} {{ seat.currentMember.lastname }})
+            {% if seat.member_firstname %}
+            ({{ seat.member_firstname }} {{ seat.member_lastname }})
             {% endif %}
         </h3>
         <dl>{% if seat.appointedBy %}

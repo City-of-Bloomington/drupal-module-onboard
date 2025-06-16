@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright 2017-2023 City of Bloomington, Indiana
+ * @copyright 2017-2025 City of Bloomington, Indiana
  * @license https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt GNU/GPL, see LICENSE
  */
 namespace Drupal\onboard\Controller;
@@ -32,7 +32,7 @@ class OnBoardController extends ControllerBase
             $year = (int)$year;
             if (!$year) { $year = (int)date('Y');  }
 
-            $committee_id = $node->$field->value;
+            $committee_id = (int)$node->$field->value;
 
             $meetings = OnBoardService::meetings($committee_id, $year);
             $years    = OnBoardService::meetingFile_years($committee_id);
@@ -54,7 +54,7 @@ class OnBoardController extends ControllerBase
         $field = $this->getCommitteeIdField();
 
         if ($node->hasField($field) && $node->$field->value) {
-            $committee_id = $node->$field->value;
+            $committee_id = (int)$node->$field->value;
 
             $reports = OnBoardService::reports($committee_id);
 
@@ -72,7 +72,7 @@ class OnBoardController extends ControllerBase
     {
         $field = $this->getCommitteeIdField();
         if ($node->hasField($field) && $node->$field->value) {
-            $committee_id = $node->$field->value;
+            $committee_id = (int)$node->$field->value;
 
             $types = [];
             foreach (OnBoardService::legislation_types() as $t) {
@@ -89,7 +89,8 @@ class OnBoardController extends ControllerBase
 
     public function legislationList($node, $type, $year)
     {
-        if (!OnBoardService::typeExists($type)) {
+        $type_id = OnBoardService::type_id($type);
+        if (!$type_id) {
             throw new NotFoundHttpException();
         }
 
@@ -97,14 +98,10 @@ class OnBoardController extends ControllerBase
         if ($node->hasField($field) && $node->$field->value) {
             $year = $year ? (int)$year : (int)date('Y');
 
-            $committee_id = $node->$field->value;
+            $committee_id = (int)$node->$field->value;
 
-            $years       = OnBoardService::legislation_years($committee_id, $type);
-            $legislation = OnBoardService::legislation_list([
-                'committee_id' => $committee_id,
-                'type'         => $type,
-                'year'         => $year
-            ]);
+            $years       = OnBoardService::legislation_years($committee_id, $type_id);
+            $legislation = OnBoardService::legislation_list ($committee_id, ['type' => $type, 'year' => $year ]);
 
             $maxItems    = 10;
             $half        = (int)$maxItems/2;
@@ -136,16 +133,20 @@ class OnBoardController extends ControllerBase
         throw new NotFoundHttpException();
     }
 
+    /**
+     * @param string $type  The name of the type
+     */
     public function legislationYears($node, $type)
     {
-        if (!OnBoardService::typeExists($type)) {
+        $type_id = OnBoardService::type_id($type);
+        if (!$type_id) {
             throw new NotFoundHttpException();
         }
         $field = $this->getCommitteeIdField();
 
         if ($node->hasField($field) && $node->$field->value) {
-            $committee_id = $node->$field->value;
-            $years        = OnBoardService::legislation_years($committee_id, $type);
+            $committee_id = (int)$node->$field->value;
+            $years        = OnBoardService::legislation_years($committee_id, $type_id);
 
             $decades = [];
             foreach ($years as $y=>$data) {
@@ -173,7 +174,7 @@ class OnBoardController extends ControllerBase
         $field = $this->getCommitteeIdField();
 
         if ($node->hasField($field) && $node->$field->value) {
-            $committee_id = $node->$field->value;
+            $committee_id = (int)$node->$field->value;
 
             $list = OnBoardService::legislation_list([
                 'committee_id' => $committee_id,
@@ -198,7 +199,7 @@ class OnBoardController extends ControllerBase
         $field = $this->getCommitteeIdField();
 
         if ($node->hasField($field) && $node->$field->value) {
-            $committee_id = $node->$field->value;
+            $committee_id = (int)$node->$field->value;
 
             $tonight      = new \DateTime('midnight');
             $start        = new \DateTime('-90 days');
@@ -240,7 +241,7 @@ class OnBoardController extends ControllerBase
         $field = $this->getCommitteeIdField();
 
         $fields = [
-            'committee_id' => $node->$field->value,
+            'committee_id' => (int)$node->$field->value,
             'type'         => $type,
             'number'       => $number
         ];
