@@ -38,18 +38,24 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
             if ($node->hasField( $fieldname)) {
                 $id = (int)$node->get($fieldname)->value;
                 if ($id) {
-                    $json = OnBoardService::members($id);
-                    if (isset($json[0]['committee_id'])) {
-                        usort($json, function ($a, $b) {
+                    $members = OnBoardService::members($id);
+                    if (isset($members[0]['committee_id'])) {
+                        usort($members, function ($a, $b) {
                             $as = (!$a['member_id'] || $a['carryOver']) ? 'Vacant' : $a['member_lastname'];
                             $bs = (!$b['member_id'] || $b['carryOver']) ? 'Vacant' : $b['member_lastname'];
                             if     ($as == $bs) { return 0; }
                             return ($as <  $bs) ? -1 : 1;
                         });
                     }
+                    foreach ($members as $i=>$m) {
+                        if ($m['offices']) {
+                            $members[$i]['offices'] = self::unserialize_offices($m['offices']);
+                        }
+                    }
+
                     return [
                         '#theme'       => 'onboard_members',
-                        '#members'     => $json,
+                        '#members'     => $members,
                         '#nid'         => $node->id(),
                         '#onboard_url' => OnBoardService::getUrl(),
                         '#cache'       => [
@@ -59,5 +65,18 @@ class MembersBlock extends BlockBase implements BlockPluginInterface
                 }
             }
         }
+    }
+
+    /**
+     * Returns an array of Office title strings held by a member
+     */
+    private static function unserialize_offices(string $offices): array
+    {
+        $out = [];
+        foreach (explode(',', $offices) as $o) {
+            list($id, $title) = explode('|', $o);
+            $out[] = $title;
+        }
+        return $out;
     }
 }
