@@ -51,7 +51,7 @@ class OnBoardService
 
     public static function meetings(int $committee_id, ?int $year=null, ?\DateTime $start=null, ?\DateTime $end=null, ?int $limit=0): array
     {
-        $params = ['format'=>'json'];
+        $params = ['format'=>'json', 'sort'=>'asc'];
         if ($start) {
             if (!$end) {
                 $end = clone $start;
