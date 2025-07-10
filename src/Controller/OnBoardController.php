@@ -168,7 +168,8 @@ class OnBoardController extends ControllerBase
 
     public function legislationInfo($node, $type, $year, $number)
     {
-        if (!OnBoardService::typeExists($type)) {
+        $type_id = OnBoardService::type_id($type);
+        if (!$type_id) {
             throw new NotFoundHttpException();
         }
         $field = $this->getCommitteeIdField();
@@ -176,8 +177,7 @@ class OnBoardController extends ControllerBase
         if ($node->hasField($field) && $node->$field->value) {
             $committee_id = (int)$node->$field->value;
 
-            $list = OnBoardService::legislation_list([
-                'committee_id' => $committee_id,
+            $list = OnBoardService::legislation_list($committee_id, [
                 'type'         => $type,
                 'year'         => $year,
                 'number'       => $number
