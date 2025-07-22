@@ -13,7 +13,9 @@
  * @license http://www.gnu.org/licenses/agpl.txt GNU/AGPL, see LICENSE.txt
 #}
 <div class="events">
-    {% for date, event in meetings %}
+    {% for date, day in meetings %}
+    {% for time, tm in day %}
+    {% for event in tm %}
     <article>
         <header>
             <time datetime="{{ event.start }}">
@@ -31,5 +33,7 @@
             <div class="location">{{ event.location }}</div>
         </div>
     </article>
+    {% endfor %}
+    {% endfor %}
     {% endfor %}
 </div>
