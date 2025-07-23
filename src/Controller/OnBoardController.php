@@ -209,10 +209,13 @@ class OnBoardController extends ControllerBase
             $past         = [];
             foreach ($meetings as $d => $day) {
                 $date = new \DateTime($d);
-                foreach ($day as $event_id => $meeting) {
-                    if (!empty($meeting['files'])) {
-                        if ($date < $tonight) { $past[$d] = $day; }
-                        else          { $upcoming[$d] = $day; }
+
+                foreach ($day as $t => $tm) {
+                    foreach ($tm  as $meeting) {
+                        if (!empty($meeting['files'])) {
+                            if ($date < $tonight) { $past[$d] = $day; }
+                            else { $upcoming[$d] = $day; }
+                        }
                     }
                 }
             }

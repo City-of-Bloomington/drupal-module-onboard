@@ -15,48 +15,52 @@
 #}
 <section>
     <table>
-    {% for date, event in upcoming %}
-        {% for meeting in event %}
-            <tr><th>{{ date }}</th>
-            <td>{{ meeting.title }}</td>
-            <td>{% for type, files in meeting.files %}
-                    {% for c, file in files %}
-                    <a href="{{ file.url }}">
-                        {% if file.title %}
-                        {{ file.title }}
-                        {% else %}
-                        {{ type }}{% if c %} ({{ c }}){% endif %}
-                        {% endif %}
-                        {% if not loop.last %},{% endif %}
-                    </a>
-                    {% endfor %}
+    {% for date, day in upcoming %}
+    {% for time, tm in day %}
+    {% for meeting in tm %}
+    <tr><th>{{ date }}</th>
+        <td>{{ meeting.title }}</td>
+        <td>{% for type, files in meeting.files %}
+                {% for c, file in files %}
+                <a href="{{ file.url }}">
+                    {% if file.title %}
+                    {{ file.title }}
+                    {% else %}
+                    {{ type }}{% if c %} ({{ c }}){% endif %}
+                    {% endif %}
+                    {% if not loop.last %},{% endif %}
+                </a>
                 {% endfor %}
-            </td>
-        </tr>
-        {% endfor %}
+            {% endfor %}
+        </td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
     {% endfor %}
     </table>
 
     <table>
-    {% for date, event in past %}
-        {% for meeting in event %}
-            <tr><th>{{ date }}</th>
-            <td>{{ meeting.title }}</td>
-            <td>{% for type, files in meeting.files %}
-                    {% for c, file in files %}
-                    <a href="{{ file.url }}">
-                        {% if file.title %}
-                        {{ file.title }}
-                        {% else %}
-                        {{ type }}{% if c %} ({{ c }}){% endif %}
-                        {% endif %}
-                        {% if not loop.last %},{% endif %}
-                    </a>
-                    {% endfor %}
+    {% for date, day in past %}
+    {% for time, tm in day %}
+    {% for meeting in tm %}
+    <tr><th>{{ date }}</th>
+        <td>{{ meeting.title }}</td>
+        <td>{% for type, files in meeting.files %}
+                {% for c, file in files %}
+                <a href="{{ file.url }}">
+                    {% if file.title %}
+                    {{ file.title }}
+                    {% else %}
+                    {{ type }}{% if c %} ({{ c }}){% endif %}
+                    {% endif %}
+                    {% if not loop.last %},{% endif %}
+                </a>
                 {% endfor %}
-            </td>
-        </tr>
-        {% endfor %}
+            {% endfor %}
+        </td>
+    </tr>
+    {% endfor %}
+    {% endfor %}
     {% endfor %}
     </table>
 </section>
