@@ -101,7 +101,7 @@ class OnBoardController extends ControllerBase
             $committee_id = (int)$node->$field->value;
 
             $years       = OnBoardService::legislation_years($committee_id, $type_id);
-            $legislation = OnBoardService::legislation_list ($committee_id, ['type' => $type, 'year' => $year ]);
+            $legislation = OnBoardService::legislation_list ($committee_id, ['type_id' => $type_id, 'year' => $year ]);
 
             $maxItems    = 10;
             $half        = (int)$maxItems/2;
