@@ -178,9 +178,9 @@ class OnBoardController extends ControllerBase
             $committee_id = (int)$node->$field->value;
 
             $list = OnBoardService::legislation_list($committee_id, [
-                'type'         => $type,
-                'year'         => $year,
-                'number'       => $number
+                'type_id' => $type_id,
+                'year'    => $year,
+                'number'  => $number
             ]);
             if (count($list) == 1) {
                 return [
